@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.31)
-project(Vocal_Enhancer)
+project(Vocal_Enhancer VERSION 0.0.1)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -13,22 +13,19 @@ target_include_directories(
 )
 
 
-juce_add_plugin(AudioPluginExample
-        # VERSION ...                               # Set this if the plugin version is different to the project version
-        # ICON_BIG ...                              # ICON_* arguments specify a path to an image file to use as an icon for the Standalone
-        # ICON_SMALL ...
-        # COMPANY_NAME ...                          # Specify the name of the plugin's author
-        # IS_SYNTH TRUE/FALSE                       # Is this a synth or an effect?
-        # NEEDS_MIDI_INPUT TRUE/FALSE               # Does the plugin need midi input?
-        # NEEDS_MIDI_OUTPUT TRUE/FALSE              # Does the plugin need midi output?
-        # IS_MIDI_EFFECT TRUE/FALSE                 # Is this plugin a MIDI effect?
-        # EDITOR_WANTS_KEYBOARD_FOCUS TRUE/FALSE    # Does the editor need keyboard focus?
-        # COPY_PLUGIN_AFTER_BUILD TRUE/FALSE        # Should the plugin be installed to a default location after building?
-        PLUGIN_MANUFACTURER_CODE Juce               # A four-character manufacturer id with at least one upper-case character
-        PLUGIN_CODE Dem0                            # A unique four-character plugin id with exactly one upper-case character
+juce_add_plugin(Vocal_Enhancer
+        COMPANY_NAME "Stuidoshine"                  # Specify the name of the plugin's author
+        IS_SYNTH FALSE                              # Is this a synth or an effect?
+        NEEDS_MIDI_INPUT FALSE                      # Does the plugin need midi input?
+        NEEDS_MIDI_OUTPUT FALSE                     # Does the plugin need midi output?
+        IS_MIDI_EFFECT TRUE                         # Is this plugin a MIDI effect?
+        EDITOR_WANTS_KEYBOARD_FOCUS FALSE           # Does the editor need keyboard focus?
+        COPY_PLUGIN_AFTER_BUILD TRUE                # Should the plugin be installed to a default location after building?
+        PLUGIN_MANUFACTURER_CODE Stsh               # A four-character manufacturer id with at least one upper-case character
+        PLUGIN_CODE Voeh                            # A unique four-character plugin id with exactly one upper-case character
         # GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case
         FORMATS AU VST3 Standalone                  # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
-        PRODUCT_NAME "Audio Plugin Example")        # The name of the final executable, which can differ from the target name
+        PRODUCT_NAME "Vocal Enhancer")        # The name of the final executable, which can differ from the target name
 
 # `juce_generate_juce_header` will create a JuceHeader.h for a given target, which will be generated
 # into your build tree. This should be included with `#include <JuceHeader.h>`. The include path for
@@ -43,8 +40,9 @@ juce_add_plugin(AudioPluginExample
 # Finally, we supply a list of source files that will be built into the target. This is a standard
 # CMake command.
 
-target_sources(AudioPluginExample
+target_sources(Vocal_Enhancer
         PRIVATE
+        # TODO: change target
         PluginEditor.cpp
         PluginProcessor.cpp)
 
@@ -55,7 +53,7 @@ target_sources(AudioPluginExample
 # definitions will be visible both to your code, and also the JUCE module code, so for new
 # definitions, pick unique names that are unlikely to collide! This is a standard CMake command.
 
-target_compile_definitions(AudioPluginExample
+target_compile_definitions(Vocal_Enhancer
         PUBLIC
         # JUCE_WEB_BROWSER and JUCE_USE_CURL would be on by default, but you might not need them.
         JUCE_WEB_BROWSER=0  # If you remove this, add `NEEDS_WEB_BROWSER TRUE` to the `juce_add_plugin` call
@@ -77,7 +75,7 @@ target_compile_definitions(AudioPluginExample
 # linked automatically. If we'd generated a binary data target above, we would need to link to it
 # here too. This is a standard CMake command.
 
-target_link_libraries(AudioPluginExample
+target_link_libraries(Vocal_Enhancer
         PRIVATE
         # AudioPluginData           # If we'd created a binary data target, we'd link to it here
         juce::juce_audio_utils
