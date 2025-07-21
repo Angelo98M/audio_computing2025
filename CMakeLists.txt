@@ -15,7 +15,7 @@ juce_add_plugin(Vocal_Enhancer
         IS_SYNTH FALSE                              # Is this a synth or an effect?
         NEEDS_MIDI_INPUT FALSE                      # Does the plugin need midi input?
         NEEDS_MIDI_OUTPUT FALSE                     # Does the plugin need midi output?
-        IS_MIDI_EFFECT TRUE                         # Is this plugin a MIDI effect?
+        IS_MIDI_EFFECT FALSE                         # Is this plugin a MIDI effect?
         EDITOR_WANTS_KEYBOARD_FOCUS FALSE           # Does the editor need keyboard focus?
         COPY_PLUGIN_AFTER_BUILD TRUE                # Should the plugin be installed to a default location after building?
         PLUGIN_MANUFACTURER_CODE Stsh               # A four-character manufacturer id with at least one upper-case character
@@ -77,7 +77,6 @@ target_link_libraries(Vocal_Enhancer
         # AudioPluginData           # If we'd created a binary data target, we'd link to it here
         juce::juce_audio_utils
         PUBLIC
-        Equalizer_VE::Equalizer_VE
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
         juce::juce_recommended_warning_flags)
