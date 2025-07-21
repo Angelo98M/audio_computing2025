@@ -1,0 +1,13 @@
+# ninja log v6
+22	305	7747605005347018	F:/Uni stuff/Audio Computing/plugin/audio_computing2025/cmake-build-debug/Equalizer/tools/CMakeFiles/cmake.verify_globs	f93bb7edd76cd4a1
+345	409	7747605008575270	extras/Build/juceaide/CMakeFiles/juceaide.dir/__/__/__/modules/juce_core/juce_core_CompilationTime.cpp.obj	e5b15e493f678fb9
+331	711	7747605008435230	extras/Build/juceaide/CMakeFiles/juceaide.dir/__/__/__/modules/juce_graphics/juce_graphics_Sheenbidi.c.obj	59515277e70354e2
+350	2329	7747605008625283	extras/Build/juceaide/CMakeFiles/juceaide.dir/__/__/__/modules/juce_data_structures/juce_data_structures.cpp.obj	bd050a255e4892ce
+335	3098	7747605008475260	extras/Build/juceaide/CMakeFiles/juceaide.dir/__/__/__/modules/juce_events/juce_events.cpp.obj	a7fb7d99c52b189e
+307	3917	7747605008195192	extras/Build/juceaide/CMakeFiles/juceaide.dir/Main.cpp.obj	5f2e31ce67233acc
+312	3972	7747605008245196	extras/Build/juceaide/CMakeFiles/juceaide.dir/__/juce_build_tools/juce_build_tools.cpp.obj	3497495720fac683
+341	8316	7747605008525257	extras/Build/juceaide/CMakeFiles/juceaide.dir/__/__/__/modules/juce_core/juce_core.cpp.obj	48338a49e3adda66
+322	14547	7747605008335209	extras/Build/juceaide/CMakeFiles/juceaide.dir/__/__/__/modules/juce_graphics/juce_graphics.cpp.obj	7bb3180600dbba6
+326	17573	7747605008385220	extras/Build/juceaide/CMakeFiles/juceaide.dir/__/__/__/modules/juce_graphics/juce_graphics_Harfbuzz.cpp.obj	c3510a99c4958934
+316	26134	7747605008285208	extras/Build/juceaide/CMakeFiles/juceaide.dir/__/__/__/modules/juce_gui_basics/juce_gui_basics.cpp.obj	1d603bfbcbc3218e
+26135	26704	7747605266468344	extras/Build/juceaide/juceaide_artefacts/Custom/juceaide.exe	d2c93f2f95bfbe36
