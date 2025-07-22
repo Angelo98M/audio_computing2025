@@ -2,10 +2,10 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "Vocal_Enhancer_artefacts/Debug/VST3/Vocal Enhancer.vst3/Contents/x86_64-win/Vocal Enhancer.vst3"
+			"path" : "Vocal_Enhancer_artefacts/Debug/Standalone/Vocal Enhancer.exe"
 		},
 		{
-			"path" : "Vocal_Enhancer_artefacts/Debug/VST3/Vocal Enhancer.pdb"
+			"path" : "Vocal_Enhancer_artefacts/Debug/Standalone/Vocal Enhancer.pdb"
 		}
 	],
 	"backtrace" : 4,
@@ -13,15 +13,12 @@
 	{
 		"commands" : 
 		[
-			"add_library",
+			"add_executable",
 			"_juce_link_plugin_wrapper",
 			"_juce_configure_plugin_targets",
 			"juce_add_plugin",
 			"target_link_libraries",
 			"_juce_add_resources_rc",
-			"add_custom_command",
-			"juce_enable_vst3_manifest_step",
-			"_juce_set_plugin_target_properties",
 			"target_include_directories"
 		],
 		"files" : 
@@ -37,7 +34,7 @@
 			{
 				"command" : 3,
 				"file" : 1,
-				"line" : 13,
+				"line" : 11,
 				"parent" : 0
 			},
 			{
@@ -55,7 +52,7 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 1405,
+				"line" : 1403,
 				"parent" : 3
 			},
 			{
@@ -63,12 +60,6 @@
 				"file" : 0,
 				"line" : 1418,
 				"parent" : 3
-			},
-			{
-				"command" : 4,
-				"file" : 1,
-				"line" : 75,
-				"parent" : 0
 			},
 			{
 				"command" : 5,
@@ -80,28 +71,10 @@
 				"command" : 4,
 				"file" : 0,
 				"line" : 841,
-				"parent" : 7
-			},
-			{
-				"command" : 8,
-				"file" : 0,
-				"line" : 1452,
-				"parent" : 3
-			},
-			{
-				"command" : 7,
-				"file" : 0,
-				"line" : 1234,
-				"parent" : 9
+				"parent" : 6
 			},
 			{
 				"command" : 6,
-				"file" : 0,
-				"line" : 1105,
-				"parent" : 10
-			},
-			{
-				"command" : 9,
 				"file" : 0,
 				"line" : 1415,
 				"parent" : 3
@@ -213,7 +186,7 @@
 				},
 				{
 					"backtrace" : 5,
-					"define" : "JucePlugin_AAXCategory=65536"
+					"define" : "JucePlugin_AAXCategory=0"
 				},
 				{
 					"backtrace" : 5,
@@ -265,7 +238,7 @@
 				},
 				{
 					"backtrace" : 5,
-					"define" : "JucePlugin_AUMainType='aumi'"
+					"define" : "JucePlugin_AUMainType='aufx'"
 				},
 				{
 					"backtrace" : 5,
@@ -293,7 +266,7 @@
 				},
 				{
 					"backtrace" : 5,
-					"define" : "JucePlugin_Build_Standalone=0"
+					"define" : "JucePlugin_Build_Standalone=1"
 				},
 				{
 					"backtrace" : 5,
@@ -301,7 +274,7 @@
 				},
 				{
 					"backtrace" : 5,
-					"define" : "JucePlugin_Build_VST3=1"
+					"define" : "JucePlugin_Build_VST3=0"
 				},
 				{
 					"backtrace" : 5,
@@ -325,7 +298,7 @@
 				},
 				{
 					"backtrace" : 5,
-					"define" : "JucePlugin_IsMidiEffect=1"
+					"define" : "JucePlugin_IsMidiEffect=0"
 				},
 				{
 					"backtrace" : 5,
@@ -396,9 +369,6 @@
 					"define" : "JucePlugin_WantsMidiInput=0"
 				},
 				{
-					"define" : "Vocal_Enhancer_VST3_EXPORTS"
-				},
-				{
 					"backtrace" : 5,
 					"define" : "_DEBUG=1"
 				}
@@ -406,52 +376,48 @@
 			"includes" : 
 			[
 				{
-					"backtrace" : 12,
+					"backtrace" : 8,
 					"path" : "F:/Uni stuff/Audio Computing/plugin/audio_computing2025/cmake-build-debug/Vocal_Enhancer_artefacts/JuceLibraryCode"
 				},
 				{
-					"backtrace" : 12,
+					"backtrace" : 8,
 					"path" : "F:/Uni stuff/Audio Computing/plugin/audio_computing2025/extern/JUCE/modules"
 				},
 				{
-					"backtrace" : 12,
+					"backtrace" : 8,
 					"path" : "F:/Uni stuff/Audio Computing/plugin/audio_computing2025/extern/JUCE/modules/juce_audio_processors/format_types/VST3_SDK"
 				},
 				{
-					"backtrace" : 12,
+					"backtrace" : 8,
 					"path" : "F:/Uni stuff/Audio Computing/plugin/audio_computing2025/extern/JUCE/modules/juce_audio_processors/format_types/LV2_SDK"
 				},
 				{
-					"backtrace" : 12,
+					"backtrace" : 8,
 					"path" : "F:/Uni stuff/Audio Computing/plugin/audio_computing2025/extern/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/lv2"
 				},
 				{
-					"backtrace" : 12,
+					"backtrace" : 8,
 					"path" : "F:/Uni stuff/Audio Computing/plugin/audio_computing2025/extern/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/serd"
 				},
 				{
-					"backtrace" : 12,
+					"backtrace" : 8,
 					"path" : "F:/Uni stuff/Audio Computing/plugin/audio_computing2025/extern/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/sord"
 				},
 				{
-					"backtrace" : 12,
+					"backtrace" : 8,
 					"path" : "F:/Uni stuff/Audio Computing/plugin/audio_computing2025/extern/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/sord/src"
 				},
 				{
-					"backtrace" : 12,
+					"backtrace" : 8,
 					"path" : "F:/Uni stuff/Audio Computing/plugin/audio_computing2025/extern/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/sratom"
 				},
 				{
-					"backtrace" : 12,
+					"backtrace" : 8,
 					"path" : "F:/Uni stuff/Audio Computing/plugin/audio_computing2025/extern/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/lilv"
 				},
 				{
-					"backtrace" : 12,
+					"backtrace" : 8,
 					"path" : "F:/Uni stuff/Audio Computing/plugin/audio_computing2025/extern/JUCE/modules/juce_audio_processors/format_types/LV2_SDK/lilv/src"
-				},
-				{
-					"backtrace" : 12,
-					"path" : "F:/Uni stuff/Audio Computing/plugin/audio_computing2025/Equalizer/Include"
 				}
 			],
 			"language" : "CXX",
@@ -479,43 +445,34 @@
 	"dependencies" : 
 	[
 		{
-			"backtrace" : 5,
-			"id" : "Vocal_Enhancer::@6890427a1f51a3e7e1df"
-		},
-		{
-			"backtrace" : 8,
+			"backtrace" : 7,
 			"id" : "Vocal_Enhancer_rc_lib::@6890427a1f51a3e7e1df"
 		},
 		{
-			"backtrace" : 11,
-			"id" : "juce_vst3_helper::@6890427a1f51a3e7e1df"
-		},
-		{
 			"backtrace" : 5,
-			"id" : "Equalizer::@038898ebd9eb5700ca78"
+			"id" : "Vocal_Enhancer::@6890427a1f51a3e7e1df"
 		}
 	],
 	"folder" : 
 	{
 		"name" : "Vocal_Enhancer"
 	},
-	"id" : "Vocal_Enhancer_VST3::@6890427a1f51a3e7e1df",
+	"id" : "Vocal_Enhancer_Standalone::@6890427a1f51a3e7e1df",
 	"link" : 
 	{
 		"commandFragments" : 
 		[
 			{
-				"fragment" : "/machine:x64 /debug /INCREMENTAL",
+				"fragment" : "/DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -MDd -Zi",
+				"role" : "flags"
+			},
+			{
+				"fragment" : "/machine:x64 /debug /INCREMENTAL /subsystem:windows",
 				"role" : "flags"
 			},
 			{
 				"backtrace" : 5,
 				"fragment" : "\"Vocal_Enhancer_artefacts\\Debug\\Vocal Enhancer_SharedCode.lib\"",
-				"role" : "libraries"
-			},
-			{
-				"backtrace" : 6,
-				"fragment" : "Equalizer\\Equalizer.lib",
 				"role" : "libraries"
 			},
 			{
@@ -525,8 +482,8 @@
 		],
 		"language" : "CXX"
 	},
-	"name" : "Vocal_Enhancer_VST3",
-	"nameOnDisk" : "Vocal Enhancer.vst3",
+	"name" : "Vocal_Enhancer_Standalone",
+	"nameOnDisk" : "Vocal Enhancer.exe",
 	"paths" : 
 	{
 		"build" : ".",
@@ -607,11 +564,11 @@
 			"sourceGroupIndex" : 0
 		},
 		{
-			"backtrace" : 8,
+			"backtrace" : 7,
 			"isGenerated" : true,
 			"path" : "cmake-build-debug/CMakeFiles/Vocal_Enhancer_rc_lib.dir/Vocal_Enhancer_artefacts/JuceLibraryCode/Vocal_Enhancer_resources.rc.res",
 			"sourceGroupIndex" : 1
 		}
 	],
-	"type" : "MODULE_LIBRARY"
+	"type" : "EXECUTABLE"
 }

@@ -739,7 +739,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "6"
+			"value" : "5"
 		},
 		{
 			"name" : "CMAKE_PLATFORM_INFO_INITIALIZED",
@@ -1403,7 +1403,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "F:/Uni stuff/Audio Computing/plugin/audio_computing2025/cmake-build-debug/Equalizer"
+			"value" : "F:/Uni stuff/Audio Computing/plugin/audio_computing2025/cmake-build-debug"
 		},
 		{
 			"name" : "Vocal_Enhancer_IS_TOP_LEVEL",
@@ -1415,7 +1415,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "OFF"
+			"value" : "ON"
 		},
 		{
 			"name" : "Vocal_Enhancer_SOURCE_DIR",
@@ -1427,7 +1427,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "F:/Uni stuff/Audio Computing/plugin/audio_computing2025/Equalizer"
+			"value" : "F:/Uni stuff/Audio Computing/plugin/audio_computing2025"
 		},
 		{
 			"name" : "compile_result",

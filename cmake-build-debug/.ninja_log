@@ -1,6 +1,4 @@
 # ninja log v6
-6	303	7747597230806881	F:/Uni stuff/Audio Computing/plugin/audio_computing2025/cmake-build-debug/CMakeFiles/cmake.verify_globs	638fb8630cfc6f8f
+12	310	7747623165652577	F:/Uni stuff/Audio Computing/plugin/audio_computing2025/cmake-build-debug/CMakeFiles/cmake.verify_globs	638fb8630cfc6f8f
 304	3128	7747597233787555	CMakeFiles/juce_vst3_helper.dir/extern/JUCE/modules/juce_audio_plugin_client/VST3/juce_VST3ManifestHelper.cpp.obj	593c82764ba18dc7
 3129	3804	7747597262030921	juce_vst3_helper.exe	1292b2c02a4115dd
-16	296	7747623045364787	F:/Uni stuff/Audio Computing/plugin/audio_computing2025/cmake-build-debug/CMakeFiles/cmake.verify_globs	638fb8630cfc6f8f
-12	310	7747623165652577	F:/Uni stuff/Audio Computing/plugin/audio_computing2025/cmake-build-debug/CMakeFiles/cmake.verify_globs	638fb8630cfc6f8f

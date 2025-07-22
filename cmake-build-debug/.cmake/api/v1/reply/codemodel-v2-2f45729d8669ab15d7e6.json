@@ -8,8 +8,7 @@
 					"build" : ".",
 					"childIndexes" : 
 					[
-						1,
-						5
+						1
 					],
 					"hasInstallRule" : true,
 					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
@@ -21,12 +20,12 @@
 					"source" : ".",
 					"targetIndexes" : 
 					[
+						0,
 						1,
 						2,
 						3,
 						4,
-						5,
-						6
+						5
 					]
 				},
 				{
@@ -85,21 +84,6 @@
 					"parentIndex" : 3,
 					"projectIndex" : 1,
 					"source" : "extern/JUCE/extras/Build/juceaide"
-				},
-				{
-					"build" : "Equalizer",
-					"jsonFile" : "directory-Equalizer-Debug-67868586d6b38efff129.json",
-					"minimumCMakeVersion" : 
-					{
-						"string" : "3.31"
-					},
-					"parentIndex" : 0,
-					"projectIndex" : 0,
-					"source" : "Equalizer",
-					"targetIndexes" : 
-					[
-						0
-					]
 				}
 			],
 			"name" : "Debug",
@@ -112,8 +96,7 @@
 					],
 					"directoryIndexes" : 
 					[
-						0,
-						5
+						0
 					],
 					"name" : "Vocal_Enhancer",
 					"targetIndexes" : 
@@ -123,8 +106,7 @@
 						2,
 						3,
 						4,
-						5,
-						6
+						5
 					]
 				},
 				{
@@ -142,51 +124,44 @@
 			"targets" : 
 			[
 				{
-					"directoryIndex" : 5,
-					"id" : "Equalizer::@038898ebd9eb5700ca78",
-					"jsonFile" : "target-Equalizer-Debug-bada7565dc1a453e61e0.json",
-					"name" : "Equalizer",
-					"projectIndex" : 0
-				},
-				{
 					"directoryIndex" : 0,
 					"id" : "Vocal_Enhancer::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-Vocal_Enhancer-Debug-266471fa8207f43a3640.json",
+					"jsonFile" : "target-Vocal_Enhancer-Debug-a1bbd3074589f13fe7f7.json",
 					"name" : "Vocal_Enhancer",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 0,
 					"id" : "Vocal_Enhancer_All::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-Vocal_Enhancer_All-Debug-769252500712f0b48f38.json",
+					"jsonFile" : "target-Vocal_Enhancer_All-Debug-3f675a4309d987ff2d93.json",
 					"name" : "Vocal_Enhancer_All",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 0,
 					"id" : "Vocal_Enhancer_Standalone::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-Vocal_Enhancer_Standalone-Debug-28e76bc75f238bbc8d22.json",
+					"jsonFile" : "target-Vocal_Enhancer_Standalone-Debug-104254e13fc19914024c.json",
 					"name" : "Vocal_Enhancer_Standalone",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 0,
 					"id" : "Vocal_Enhancer_VST3::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-Vocal_Enhancer_VST3-Debug-9f22742e2393c543f9c0.json",
+					"jsonFile" : "target-Vocal_Enhancer_VST3-Debug-f7a686a4a476f41bf7e5.json",
 					"name" : "Vocal_Enhancer_VST3",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 0,
 					"id" : "Vocal_Enhancer_rc_lib::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-Vocal_Enhancer_rc_lib-Debug-b3b3001b045355744750.json",
+					"jsonFile" : "target-Vocal_Enhancer_rc_lib-Debug-3ed3b9e56b7ee2d0325c.json",
 					"name" : "Vocal_Enhancer_rc_lib",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 0,
 					"id" : "juce_vst3_helper::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-juce_vst3_helper-Debug-b35f2735957e7efa53b5.json",
+					"jsonFile" : "target-juce_vst3_helper-Debug-a744361de2c372bbb2f2.json",
 					"name" : "juce_vst3_helper",
 					"projectIndex" : 0
 				}

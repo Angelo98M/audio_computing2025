@@ -3470,9 +3470,6 @@
 		{
 			"isGenerated" : true,
 			"path" : "cmake-build-debug/extern/JUCE/tools/JUCEToolsExport.cmake"
-		},
-		{
-			"path" : "Equalizer/CMakeLists.txt"
 		}
 	],
 	"kind" : "cmakeFiles",

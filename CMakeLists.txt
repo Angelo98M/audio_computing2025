@@ -6,8 +6,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # JUCE
 add_subdirectory(extern/JUCE)
-#Equilzer
-add_subdirectory(Equalizer)
 
 
 juce_add_plugin(Vocal_Enhancer
