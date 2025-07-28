@@ -68,11 +68,11 @@
 	[
 		{
 			"backtrace" : 5,
-			"id" : "Vocal_Enhancer_Standalone::@6890427a1f51a3e7e1df"
+			"id" : "Vocal_Enhancer_VST3::@6890427a1f51a3e7e1df"
 		},
 		{
 			"backtrace" : 7,
-			"id" : "Vocal_Enhancer_VST3::@6890427a1f51a3e7e1df"
+			"id" : "Vocal_Enhancer_Standalone::@6890427a1f51a3e7e1df"
 		}
 	],
 	"folder" : 

@@ -1,7 +1,11 @@
 #pragma once
 
 #include <juce_audio_processors/juce_audio_processors.h>
-#include <Equalizer_VE.hpp>
+#include "DSP/Exciter_VE.hpp"
+#include "DSP/DeEsser_VE.hpp"
+#include "DSP/Compressor_VE.hpp"
+
+
 
 //==============================================================================
 class AudioPluginAudioProcessor final : public juce::AudioProcessor
@@ -46,5 +50,7 @@ public:
 private:
     //==============================================================================
     Equalizer_VE equalizer;
+    DeEsser_VE de_esser;
+    Exciter_VE exciter;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessor)
 };

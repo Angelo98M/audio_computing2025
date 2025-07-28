@@ -24,3 +24,4 @@ private:
 
     Chain filterChain;
     double currentSampleRate = 44100.0;
+};
