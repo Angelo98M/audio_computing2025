@@ -38,8 +38,12 @@ juce_add_plugin(Vocal_Enhancer
 target_sources(Vocal_Enhancer
         PRIVATE
         # TODO: change target
-        src/PluginEditor.cpp
-        src/VocalEnhancerProcessor.cpp)
+        src/VocalEnhancerEditor.cpp
+        src/VocalEnhancerProcessor.cpp
+        src/DSP/Compressor_VE.cpp
+        src/DSP/Equalizer_VE.cpp
+        src/DSP/DeEsser_VE.cpp
+        src/DSP/Exciter_VE.cpp)
 
 # `target_compile_definitions` adds some preprocessor definitions to our target. In a Projucer
 # project, these might be passed in the 'Preprocessor Definitions' field. JUCE modules also make use
@@ -77,4 +81,8 @@ target_link_libraries(Vocal_Enhancer
         PUBLIC
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
-        juce::juce_recommended_warning_flags)
+        juce::juce_recommended_warning_flags
+        juce::juce_core
+        juce::juce_audio_basics
+        juce::juce_audio_processors
+        juce::juce_dsp)

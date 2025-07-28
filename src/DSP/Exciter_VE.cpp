@@ -1,6 +1,6 @@
 #include "Exciter_VE.hpp"
 
-Exciter_VE::Exciter()
+Exciter_VE::Exciter_VE()
 {
     auto coeffs = juce::dsp::IIR::Coefficients<float>::makeHighPass(44100.0, 3000.0); // >3kHz
     *highPassFilter.state = *coeffs;

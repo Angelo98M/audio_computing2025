@@ -48,6 +48,6 @@ private:
     Compressor_VE compressor;
     DeEsser_VE deEsser;
 
-    void updateParameters();
+    juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (VocalEnhancerProcessor)
 };

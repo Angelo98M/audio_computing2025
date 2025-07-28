@@ -1,6 +1,6 @@
 #include "DeEsser_VE.hpp"
 
-DeEsser_VE::DeEsser()
+DeEsser_VE::DeEsser_VE()
 {
     sibilanceCompressor.setThreshold(-20.0f); // dB
     sibilanceCompressor.setRatio(4.0f);       // 4:1
@@ -19,7 +19,7 @@ void DeEsser_VE::prepare(double sampleRate, int samplesPerBlock, int numChannels
     sibilanceCompressor.reset();
 
     auto coeffs = juce::dsp::IIR::Coefficients<float>::makeHighPass(sampleRate, currentFrequency);
-    *sibilanceBandFilter.state = *coeffs;
+    *sibilanceBandFilter.coefficients = *coeffs;
 
     sibilanceBandFilter.prepare(spec);
     sibilanceCompressor.prepare(spec);
@@ -56,7 +56,7 @@ void DeEsser_VE::setFrequency(float newValue)
 {
     currentFrequency = juce::jlimit(2000.0f, 12000.0f, newValue);
     auto coeffs = juce::dsp::IIR::Coefficients<float>::makeHighPass(44100.0f, currentFrequency);
-    *sibilanceBandFilter.state = *coeffs;
+    *sibilanceBandFilter.coefficients = *coeffs;
 }
 
 void DeEsser_VE::setAttack(float newValue)
