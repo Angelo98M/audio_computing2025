@@ -10,7 +10,7 @@ VocalEnhancerProcessor::VocalEnhancerProcessor()
 
 void VocalEnhancerProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
-    const auto numChannels = getTotalNumInputChannels();
+    const auto numChannels = getTotalNumOutputChannels();
 
     equalizer.prepare(sampleRate, samplesPerBlock, numChannels);
     compressor.prepare(sampleRate, samplesPerBlock, numChannels);
@@ -77,6 +77,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout VocalEnhancerProcessor::crea
     // === Exciter ===
     params.push_back(std::make_unique<juce::AudioParameterFloat>("exciterIntensity", "Exciter Intensity", 0.0f, 1.0f, 0.7f));
     params.push_back(std::make_unique<juce::AudioParameterFloat>("exciterMix",       "Exciter Mix",       0.0f, 1.0f, 0.5f));
+
 
     return { params.begin(), params.end() };
 }

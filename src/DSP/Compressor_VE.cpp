@@ -10,16 +10,18 @@ Compressor_VE::Compressor_VE()
 
 void Compressor_VE::prepare(double sampleRate, int samplesPerBlock, int numChannels)
 {
+
     juce::dsp::ProcessSpec spec;
     spec.sampleRate = sampleRate;
     spec.maximumBlockSize = static_cast<juce::uint32>(samplesPerBlock);
     spec.numChannels = static_cast<juce::uint32>(numChannels);
-
     compressor.prepare(spec);
 }
 
 void Compressor_VE::processBlock(juce::AudioBuffer<float>& buffer)
 {
+    if (buffer.getNumSamples() == 0 || buffer.getNumChannels() == 0)
+        return;
     if (bypassed)
         return;
 
