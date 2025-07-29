@@ -1,6 +1,6 @@
 #pragma once
 
-#include <juce_gui_extra/juce_gui_extra.h>
+#include <juce_gui_basics/juce_gui_basics.h>
 #include "VocalEnhancerProcessor.hpp"
 
 class VocalEnhancerEditor : public juce::AudioProcessorEditor
@@ -34,6 +34,15 @@ private:
     std::unique_ptr<SliderAttachment> exciterIntensityAttachment, exciterMixAttachment;
 
     void configureSlider(juce::Slider& slider);
+
+
+    // === File Browser ===
+    juce::TextButton loadFileButton { "Datei Laden" };
+    std::unique_ptr<juce::FileChooser> fileChooser;
+
+    void openFileChooser();
+
+
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(VocalEnhancerEditor)
 };

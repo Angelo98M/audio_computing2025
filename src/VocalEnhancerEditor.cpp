@@ -37,6 +37,12 @@ VocalEnhancerEditor::VocalEnhancerEditor(VocalEnhancerProcessor& p)
     exciterIntensityAttachment = std::make_unique<SliderAttachment>(processorRef.parameters, "exciterIntensity", exciterIntensitySlider);
     exciterMixAttachment       = std::make_unique<SliderAttachment>(processorRef.parameters, "exciterMix", exciterMixSlider);
 
+
+    // === File Browser ===
+    addAndMakeVisible(loadFileButton);
+    loadFileButton.onClick = [this]() { openFileChooser(); };
+
+
     // === Add all sliders to the editor ===
     auto sliders = {
         &compThresholdSlider, &compRatioSlider, &compAttackSlider, &compReleaseSlider,
@@ -48,7 +54,7 @@ VocalEnhancerEditor::VocalEnhancerEditor(VocalEnhancerProcessor& p)
     for (auto* s : sliders)
         addAndMakeVisible(*s);
 
-    setSize(600, 400);
+    setSize(1000, 600);
 }
 
 void VocalEnhancerEditor::configureSlider(juce::Slider& slider)
@@ -82,7 +88,32 @@ void VocalEnhancerEditor::resized()
         s4.setBounds(area.removeFromLeft(width));
     };
 
+
     layoutRow(top, compThresholdSlider, compRatioSlider, compAttackSlider, compReleaseSlider);
     layoutRow(middle, deEsserThresholdSlider, deEsserFreqSlider, eqLowGainSlider, eqMidGainSlider);
-    layoutRow(bottom, eqHighGainSlider, exciterIntensitySlider, exciterMixSlider, exciterMixSlider); // letzter doppelt, falls leer
+    layoutRow(bottom, eqHighGainSlider, exciterIntensitySlider, exciterMixSlider, loadFileButton); // letzter doppelt, falls leer
+}
+
+void VocalEnhancerEditor::openFileChooser()
+{
+    fileChooser = std::make_unique<juce::FileChooser>("Select an audio file...",
+                                                      juce::File{},
+                                                      "*.wav;*.mp3");
+
+    auto chooserFlags = juce::FileBrowserComponent::openMode
+                      | juce::FileBrowserComponent::canSelectFiles;
+
+    fileChooser->launchAsync(chooserFlags, [this](const juce::FileChooser& chooser)
+    {
+        auto result = chooser.getResult();
+
+        if (result.existsAsFile())
+        {
+            juce::String path = result.getFullPathName();
+            juce::Logger::writeToLog("Selected file: " + path);
+
+            // TODO: Übergib den Pfad an den Processor oder lade die Datei
+            // Beispiel: processorRef.loadFile(result);
+        }
+    });
 }
