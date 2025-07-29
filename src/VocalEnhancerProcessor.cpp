@@ -6,6 +6,7 @@ VocalEnhancerProcessor::VocalEnhancerProcessor()
                                        .withOutput("Output", juce::AudioChannelSet::stereo(), true)),
       parameters(*this, nullptr, "PARAMETERS", createParameterLayout())
 {
+    formatManager.registerBasicFormats();
 }
 
 void VocalEnhancerProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
@@ -21,6 +22,48 @@ void VocalEnhancerProcessor::prepareToPlay(double sampleRate, int samplesPerBloc
 void VocalEnhancerProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer&)
 {
     juce::ScopedNoDenormals noDenormals;
+
+    const int numSamplesToProcess = buffer.getNumSamples();
+    const int numChannels = buffer.getNumChannels();
+
+    // === Datei-Playback ===
+    if (fileLoaded && isPlaying)
+    {
+        // Sicherstellen, dass wir nicht über das Ende hinaus lesen
+        const int remainingSamples = loadedBuffer.getNumSamples() - playPosition;
+        const int samplesToCopy = juce::jmin(numSamplesToProcess, remainingSamples);
+
+        for (int ch = 0; ch < numChannels; ++ch)
+        {
+            if (ch < loadedBuffer.getNumChannels())
+            {
+                buffer.copyFrom(ch, 0, loadedBuffer, ch, playPosition, samplesToCopy);
+            }
+            else
+            {
+                buffer.clear(ch, 0, numSamplesToProcess); // falls zu viele Output-Kanäle
+            }
+        }
+
+        // Rest mit Nullen auffüllen, falls Datei kürzer als Buffer
+        if (samplesToCopy < numSamplesToProcess)
+        {
+            for (int ch = 0; ch < numChannels; ++ch)
+                buffer.clear(ch, samplesToCopy, numSamplesToProcess - samplesToCopy);
+        }
+
+        playPosition += samplesToCopy;
+
+        if (playPosition >= loadedBuffer.getNumSamples())
+        {
+            stopPlayback(); // Oder playPosition = 0; // für Looping
+        }
+    }
+    else
+    {
+        // Falls keine Datei oder Wiedergabe gestoppt
+        buffer.clear();
+    }
 
     // Parameter abrufen
     compressor.setThreshold(parameters.getRawParameterValue("compThreshold")->load());
@@ -84,6 +127,41 @@ juce::AudioProcessorValueTreeState::ParameterLayout VocalEnhancerProcessor::crea
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new VocalEnhancerProcessor();
+}
+
+void VocalEnhancerProcessor::loadFile(const juce::File& audioFile)
+{
+    std::unique_ptr<juce::AudioFormatReader> reader(formatManager.createReaderFor(audioFile));
+
+    if (reader != nullptr)
+    {
+        const int numChannels = static_cast<int>(reader->numChannels);
+        const int numSamples = static_cast<int>(reader->lengthInSamples);
+
+        loadedBuffer.setSize(numChannels, numSamples);
+        reader->read(&loadedBuffer, 0, numSamples, 0, true, true);
+
+        fileLoaded = true;
+
+        juce::Logger::writeToLog("File loaded: " + audioFile.getFileName());
+        juce::Logger::writeToLog("Channels: " + juce::String(numChannels) + ", Samples: " + juce::String(numSamples));
+    }
+    else
+    {
+        juce::Logger::writeToLog("Failed to load file: " + audioFile.getFullPathName());
+        fileLoaded = false;
+    }
+}
+
+void VocalEnhancerProcessor::startPlayback()
+{
+    playPosition = 0;
+    isPlaying = true;
+}
+
+void VocalEnhancerProcessor::stopPlayback()
+{
+    isPlaying = false;
 }
 
 void VocalEnhancerProcessor::getStateInformation(juce::MemoryBlock& destData) {

@@ -1,10 +1,12 @@
 #pragma once
 
 #include <juce_audio_processors/juce_audio_processors.h>
+#include <juce_audio_utils/juce_audio_utils.h>
 #include "DSP/Exciter_VE.hpp"
 #include "DSP/DeEsser_VE.hpp"
 #include "DSP/Compressor_VE.hpp"
 #include  "DSP/Equalizer_VE.hpp"
+
 
 
 
@@ -41,12 +43,27 @@ public:
 
     juce::AudioProcessorValueTreeState parameters;
 
+    void loadFile(const juce::File& audioFile);
+    const juce::AudioBuffer<float>& getLoadedBuffer() const { return loadedBuffer; }
+    bool isFileLoaded() const { return fileLoaded; }
+    void startPlayback();   // zum Starten
+    void stopPlayback();    // zum Stoppen
+
 private:
     // DSP-Module
     Equalizer_VE equalizer;
     Exciter_VE exciter;
     Compressor_VE compressor;
     DeEsser_VE deEsser;
+
+    // === Read Audio ===
+    juce::AudioFormatManager formatManager;
+    juce::AudioBuffer<float> loadedBuffer;
+    bool fileLoaded = false;
+
+    // === play ===
+    int playPosition = 0;
+    bool isPlaying = false;
 
     juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (VocalEnhancerProcessor)

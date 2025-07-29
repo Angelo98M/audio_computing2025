@@ -42,6 +42,19 @@ VocalEnhancerEditor::VocalEnhancerEditor(VocalEnhancerProcessor& p)
     addAndMakeVisible(loadFileButton);
     loadFileButton.onClick = [this]() { openFileChooser(); };
 
+    // === Play ===
+    addAndMakeVisible(playButton);
+    addAndMakeVisible(stopButton);
+
+    playButton.onClick = [this]() {
+        if (processorRef.isFileLoaded())
+            processorRef.startPlayback();
+    };
+
+    stopButton.onClick = [this]() {
+        processorRef.stopPlayback();
+    };
+
 
     // === Add all sliders to the editor ===
     auto sliders = {
@@ -77,7 +90,8 @@ void VocalEnhancerEditor::resized()
     auto bounds = getLocalBounds().reduced(10);
     auto top = bounds.removeFromTop(150);
     auto middle = bounds.removeFromTop(120);
-    auto bottom = bounds;
+    auto bottom = bounds.removeFromTop(90);
+    auto fotter = bounds;
 
     auto layoutRow = [](auto& area, auto& s1, auto& s2, auto& s3, auto& s4)
     {
@@ -88,10 +102,14 @@ void VocalEnhancerEditor::resized()
         s4.setBounds(area.removeFromLeft(width));
     };
 
+    auto bottomBar = bounds.removeFromBottom(40);
+    playButton.setBounds(bottomBar.removeFromLeft(100));
+    stopButton.setBounds(bottomBar.removeFromLeft(100));
 
     layoutRow(top, compThresholdSlider, compRatioSlider, compAttackSlider, compReleaseSlider);
     layoutRow(middle, deEsserThresholdSlider, deEsserFreqSlider, eqLowGainSlider, eqMidGainSlider);
-    layoutRow(bottom, eqHighGainSlider, exciterIntensitySlider, exciterMixSlider, loadFileButton); // letzter doppelt, falls leer
+    layoutRow(bottom, eqHighGainSlider, exciterIntensitySlider, exciterMixSlider, exciterMixSlider);
+    layoutRow(fotter,playButton,stopButton,loadFileButton,playButton);// letzter doppelt, falls leer
 }
 
 void VocalEnhancerEditor::openFileChooser()
@@ -112,8 +130,7 @@ void VocalEnhancerEditor::openFileChooser()
             juce::String path = result.getFullPathName();
             juce::Logger::writeToLog("Selected file: " + path);
 
-            // TODO: Übergib den Pfad an den Processor oder lade die Datei
-            // Beispiel: processorRef.loadFile(result);
+            processorRef.loadFile(result);
         }
     });
 }

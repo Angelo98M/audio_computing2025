@@ -12,6 +12,7 @@ public:
     void paint(juce::Graphics&) override;
     void resized() override;
 
+
 private:
     VocalEnhancerProcessor& processorRef;
 
@@ -39,8 +40,15 @@ private:
     // === File Browser ===
     juce::TextButton loadFileButton { "Datei Laden" };
     std::unique_ptr<juce::FileChooser> fileChooser;
-
     void openFileChooser();
+
+    // === Play ===
+    juce::TextButton playButton { "Play" };
+    juce::TextButton stopButton { "Stop" };
+
+
+
+
 
 
 
