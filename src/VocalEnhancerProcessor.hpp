@@ -48,6 +48,7 @@ public:
     bool isFileLoaded() const { return fileLoaded; }
     void startPlayback();   // zum Starten
     void stopPlayback();    // zum Stoppen
+    int getPlayPosition() const { return playPosition; }
 
 private:
     // DSP-Module

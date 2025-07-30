@@ -3,6 +3,7 @@
 VocalEnhancerEditor::VocalEnhancerEditor(VocalEnhancerProcessor& p)
     : AudioProcessorEditor(p), processorRef(p)
 {
+    startTimerHz(30);
     // === Compressor ===
     configureSlider(compThresholdSlider);
     configureSlider(compRatioSlider);
@@ -64,6 +65,8 @@ VocalEnhancerEditor::VocalEnhancerEditor(VocalEnhancerProcessor& p)
         &exciterIntensitySlider, &exciterMixSlider
     };
 
+    addAndMakeVisible(waveformDisplay);
+
     for (auto* s : sliders)
         addAndMakeVisible(*s);
 
@@ -91,7 +94,7 @@ void VocalEnhancerEditor::resized()
     auto top = bounds.removeFromTop(150);
     auto middle = bounds.removeFromTop(120);
     auto bottom = bounds.removeFromTop(90);
-    auto fotter = bounds;
+    auto fotter = bounds.removeFromTop(60);
 
     auto layoutRow = [](auto& area, auto& s1, auto& s2, auto& s3, auto& s4)
     {
@@ -105,6 +108,7 @@ void VocalEnhancerEditor::resized()
     auto bottomBar = bounds.removeFromBottom(40);
     playButton.setBounds(bottomBar.removeFromLeft(100));
     stopButton.setBounds(bottomBar.removeFromLeft(100));
+    waveformDisplay.setBounds(bounds.removeFromLeft(40));
 
     layoutRow(top, compThresholdSlider, compRatioSlider, compAttackSlider, compReleaseSlider);
     layoutRow(middle, deEsserThresholdSlider, deEsserFreqSlider, eqLowGainSlider, eqMidGainSlider);
@@ -131,6 +135,18 @@ void VocalEnhancerEditor::openFileChooser()
             juce::Logger::writeToLog("Selected file: " + path);
 
             processorRef.loadFile(result);
+            waveformDisplay.setAudioBuffer(processorRef.getLoadedBuffer());
         }
     });
+
+
 }
+
+void VocalEnhancerEditor::timerCallback()
+{
+    if (processorRef.isFileLoaded())
+    {
+        waveformDisplay.setPlayheadPosition(processorRef.getPlayPosition());
+    }
+}
+

@@ -2,8 +2,9 @@
 
 #include <juce_gui_basics/juce_gui_basics.h>
 #include "VocalEnhancerProcessor.hpp"
+#include "WaveformDisplay.hpp"
 
-class VocalEnhancerEditor : public juce::AudioProcessorEditor
+class VocalEnhancerEditor : public juce::AudioProcessorEditor, public juce::Timer
 {
 public:
     VocalEnhancerEditor(VocalEnhancerProcessor&);
@@ -45,6 +46,9 @@ private:
     // === Play ===
     juce::TextButton playButton { "Play" };
     juce::TextButton stopButton { "Stop" };
+
+    WaveformDisplay waveformDisplay;
+    void timerCallback();
 
 
 
