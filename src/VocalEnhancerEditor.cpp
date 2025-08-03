@@ -124,58 +124,20 @@ void VocalEnhancerEditor::paint(juce::Graphics& g)
 
 void VocalEnhancerEditor::resized()
 {
-
     // heigth 600 width 1000
 
     auto bounds = getLocalBounds().reduced(10);
 
-    // Jede Gruppe bekommt ca. ein Viertel des Fensters in der Höhe
-    auto groupHeight = bounds.getHeight() / 4;
+    compressorGroup.setBounds(20, 130, 400, 120);
+    deEsserGroup.setBounds(440, 130, 300, 120);
+    eqGroup.setBounds(20, 280, 720, 120);
+    exciterGroup.setBounds(20, 430, 720, 120);
 
-    auto compressorArea = bounds.removeFromTop(groupHeight).reduced(10);
-    auto deEsserArea    = bounds.removeFromTop(groupHeight).reduced(10);
-    auto eqArea         = bounds.removeFromTop(groupHeight).reduced(10);
-    auto exciterArea    = bounds.removeFromTop(groupHeight).reduced(10);
+    auto compressorArea = compressorGroup.getBounds().reduced(10);
+    auto deEsserArea    = deEsserGroup.getBounds().reduced(10);
+    auto eqArea         = eqGroup.getBounds().reduced(10);
+    auto exciterArea    = exciterGroup.getBounds().reduced(10);
 
-    compressorGroup.setBounds(compressorArea.expanded(10));
-    deEsserGroup.setBounds(deEsserArea.expanded(10));
-    eqGroup.setBounds(eqArea.expanded(10));
-    exciterGroup.setBounds(exciterArea.expanded(10));
-
-    // === Compressor Sliders ===
-    {
-        auto row = compressorArea;
-        auto width = row.getWidth() / 4;
-        compThresholdSlider.setBounds(row.removeFromLeft(width));
-        compRatioSlider.setBounds(row.removeFromLeft(width));
-        compAttackSlider.setBounds(row.removeFromLeft(width));
-        compReleaseSlider.setBounds(row.removeFromLeft(width));
-    }
-
-    // === De-Esser Sliders ===
-    {
-        auto row = deEsserArea;
-        auto width = row.getWidth() / 2;
-        deEsserThresholdSlider.setBounds(row.removeFromLeft(width));
-        deEsserFreqSlider.setBounds(row.removeFromLeft(width));
-    }
-
-    // === EQ Sliders ===
-    {
-        auto row = eqArea;
-        auto width = row.getWidth() / 3;
-        eqLowGainSlider.setBounds(row.removeFromLeft(width));
-        eqMidGainSlider.setBounds(row.removeFromLeft(width));
-        eqHighGainSlider.setBounds(row.removeFromLeft(width));
-    }
-
-    // === Exciter Sliders ===
-    {
-        auto row = exciterArea;
-        auto width = row.getWidth() / 2;
-        exciterIntensitySlider.setBounds(row.removeFromLeft(width));
-        exciterMixSlider.setBounds(row.removeFromLeft(width));
-    }
 
     // === Compressor Sliders + Labels ===
     {
@@ -242,7 +204,10 @@ void VocalEnhancerEditor::resized()
         exciterMixSlider.setBounds(s2.withTrimmedTop(25));
     }
 
-
+    playButton.setBounds(770,540,50,50);
+    stopButton.setBounds(830,540,50,50);
+    loadFileButton.setBounds(890,540,100,50);
+    waveformDisplay.setBounds(10,10,1000,100);
     //TODO: remove code below
     /*auto bounds = getLocalBounds().reduced(10);
     auto top = bounds.removeFromTop(150);
@@ -260,9 +225,7 @@ void VocalEnhancerEditor::resized()
     };
 
     auto bottomBar = bounds.removeFromBottom(40);
-    playButton.setBounds(bottomBar.removeFromLeft(100));
-    stopButton.setBounds(bottomBar.removeFromLeft(100));
-    waveformDisplay.setBounds(bounds.removeFromLeft(40));
+
 
     layoutRow(top, compThresholdSlider, compRatioSlider, compAttackSlider, compReleaseSlider);
     layoutRow(middle, deEsserThresholdSlider, deEsserFreqSlider, eqLowGainSlider, eqMidGainSlider);
