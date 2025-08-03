@@ -35,6 +35,17 @@ private:
 
     std::unique_ptr<SliderAttachment> exciterIntensityAttachment, exciterMixAttachment;
 
+    juce::GroupComponent compressorGroup { "Compressor Group", "Compressor" };
+    juce::GroupComponent deEsserGroup   { "DeEsser Group", "De-Esser" };
+    juce::GroupComponent eqGroup        { "EQ Group", "Equalizer" };
+    juce::GroupComponent exciterGroup   { "Exciter Group", "Exciter" };
+
+    // === Labels ===
+    juce::Label compThresholdLabel, compRatioLabel, compAttackLabel, compReleaseLabel;
+    juce::Label deEsserThresholdLabel, deEsserFreqLabel;
+    juce::Label eqLowGainLabel, eqMidGainLabel, eqHighGainLabel;
+    juce::Label exciterIntensityLabel, exciterMixLabel;
+
     void configureSlider(juce::Slider& slider);
 
 
