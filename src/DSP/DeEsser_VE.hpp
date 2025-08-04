@@ -17,7 +17,7 @@ public:
     void setBypassed(bool shouldBypass);
 
 private:
-    juce::dsp::IIR::Filter<float> sibilanceBandFilter;
+    std::vector<juce::dsp::IIR::Filter<float>> sibilanceBandFilters;
     juce::dsp::Compressor<float> sibilanceCompressor;
 
     float currentFrequency = 6000.0f; // Startfrequenz

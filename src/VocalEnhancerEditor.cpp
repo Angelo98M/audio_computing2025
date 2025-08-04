@@ -44,6 +44,8 @@ VocalEnhancerEditor::VocalEnhancerEditor(VocalEnhancerProcessor& p)
     addAndMakeVisible(loadFileButton);
     loadFileButton.onClick = [this]() { openFileChooser(); };
 
+    saveButton.onClick = [this] {exportProcessedFile();};
+
     // === Play ===
     addAndMakeVisible(playButton);
     addAndMakeVisible(stopButton);
@@ -104,8 +106,9 @@ VocalEnhancerEditor::VocalEnhancerEditor(VocalEnhancerProcessor& p)
     addAndMakeVisible(eqGroup);
     addAndMakeVisible(exciterGroup);
 
+    // if (processorRef.getIsStandalone()) addAndMakeVisible(saveButton);
 
-    setSize(1000, 600);
+    setSize(755, 600);
 }
 
 void VocalEnhancerEditor::configureSlider(juce::Slider& slider)
@@ -131,8 +134,8 @@ void VocalEnhancerEditor::resized()
 
     compressorGroup.setBounds(20, 130, 400, 120);
     deEsserGroup.setBounds(440, 130, 300, 120);
-    eqGroup.setBounds(20, 280, 720, 120);
-    exciterGroup.setBounds(20, 430, 720, 120);
+    eqGroup.setBounds(20, 260, 720, 120);
+    exciterGroup.setBounds(20, 400, 720, 120);
 
     auto compressorArea = compressorGroup.getBounds().reduced(10);
     auto deEsserArea    = deEsserGroup.getBounds().reduced(10);
@@ -205,10 +208,11 @@ void VocalEnhancerEditor::resized()
         exciterMixSlider.setBounds(s2.withTrimmedTop(25));
     }
 
-    playButton.setBounds(770,540,50,50);
-    stopButton.setBounds(830,540,50,50);
-    loadFileButton.setBounds(890,540,100,50);
-    waveformDisplay.setBounds(10,10,1000,100);
+    playButton.setBounds(410,540,50,50);
+    stopButton.setBounds(470,540,50,50);
+    loadFileButton.setBounds(640,540,100,50);
+    saveButton.setBounds(530,540,100,50);
+    waveformDisplay.setBounds(10,10,740,100);
 
 }
 
@@ -236,6 +240,75 @@ void VocalEnhancerEditor::openFileChooser()
     });
 
 
+}
+
+void VocalEnhancerEditor::exportProcessedFile()
+{
+    saveChooser = std::make_unique<juce::FileChooser>("WAV-Datei speichern...",
+                                                        juce::File::getSpecialLocation(juce::File::userDesktopDirectory),
+                                                        "*.wav");
+
+    auto chooserFlags = juce::FileBrowserComponent::saveMode |
+                        juce::FileBrowserComponent::canSelectFiles;
+
+    saveChooser->launchAsync(chooserFlags, [this](const juce::FileChooser& fc)
+    {
+        auto file = fc.getResult();
+
+        if (file == juce::File{})
+        {
+            DBG("Speichern abgebrochen.");
+            return;
+        }
+
+        juce::File finalFile = file.withFileExtension(".wav");
+
+        processorRef.prepareWriteBuffer();
+        const auto& buffer = processorRef.getWriteBuffer();
+
+        if (buffer.getNumSamples() == 0)
+        {
+            DBG("Kein Audio im writeBuffer vorhanden!");
+            return;
+        }
+
+        juce::WavAudioFormat wavFormat;
+        auto outputStream = finalFile.createOutputStream();
+
+        if (!outputStream)
+        {
+            DBG("Konnte keinen OutputStream erzeugen!");
+            return;
+        }
+
+        std::unique_ptr<juce::AudioFormatWriter> writer(
+            wavFormat.createWriterFor(outputStream.get(),
+                                      processorRef.getLoadedSampleRate(),
+                                      buffer.getNumChannels(),
+                                      16,
+                                      {},
+                                      0)
+        );
+
+        if (!writer)
+        {
+            DBG("Konnte keinen WAV-Writer erzeugen!");
+            return;
+        }
+
+
+        outputStream.release(); // Übergibt ownership an writer
+
+        if (writer->writeFromAudioSampleBuffer(buffer, 0, buffer.getNumSamples()))
+        {
+
+            DBG("Export erfolgreich: " + finalFile.getFullPathName());
+        }
+        else
+        {
+            DBG("Export fehlgeschlagen!");
+        }
+    });
 }
 
 void VocalEnhancerEditor::timerCallback()

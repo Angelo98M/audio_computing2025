@@ -12,11 +12,12 @@ VocalEnhancerProcessor::VocalEnhancerProcessor()
 void VocalEnhancerProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
     const auto numChannels = getTotalNumOutputChannels();
+    loadedSampleRate = sampleRate;
 
-    equalizer.prepare(sampleRate, samplesPerBlock, numChannels);
-    compressor.prepare(sampleRate, samplesPerBlock, numChannels);
-    deEsser.prepare(sampleRate, samplesPerBlock, numChannels);
-    exciter.prepare(sampleRate, samplesPerBlock, numChannels);
+    equalizer.prepare(loadedSampleRate, samplesPerBlock, numChannels);
+    compressor.prepare(loadedSampleRate, samplesPerBlock, numChannels);
+    deEsser.prepare(loadedSampleRate, samplesPerBlock, numChannels);
+    exciter.prepare(loadedSampleRate, samplesPerBlock, numChannels);
 }
 
 void VocalEnhancerProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer&) {
@@ -94,9 +95,58 @@ void VocalEnhancerProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
         deEsser.processBlock(buffer);
         equalizer.processBlock(buffer);
         exciter.processBlock(buffer);
-        if (isStandalone) writebuffer.makeCopyOf(buffer);
     }
 }
+
+void VocalEnhancerProcessor::prepareWriteBuffer()
+{
+    if (!fileLoaded || loadedBuffer.getNumSamples() == 0)
+        return;
+
+    jassert(loadedBuffer.getNumSamples() > 0);
+    jassert(loadedBuffer.getNumChannels() > 0);
+    writebuffer.makeCopyOf(loadedBuffer);
+    std::cout << "writebuffer size: " << writebuffer.getNumChannels() << std::endl;
+    std::cout<< writebuffer.getNumSamples() << " samples";
+
+    int blockSize = writebuffer.getNumSamples(); // gesamter Buffer
+
+    compressor.prepare(loadedSampleRate, blockSize, writebuffer.getNumChannels());
+    deEsser.prepare(loadedSampleRate, blockSize, writebuffer.getNumChannels());
+    equalizer.prepare(loadedSampleRate, blockSize, writebuffer.getNumChannels());
+    exciter.prepare(loadedSampleRate, blockSize, writebuffer.getNumChannels());
+
+
+
+    // Parameter wie in processBlock holen
+    compressor.setThreshold(parameters.getRawParameterValue("compThreshold")->load());
+    compressor.setRatio(parameters.getRawParameterValue("compRatio")->load());
+    compressor.setAttack(parameters.getRawParameterValue("compAttack")->load());
+    compressor.setRelease(parameters.getRawParameterValue("compRelease")->load());
+
+    deEsser.setThreshold(parameters.getRawParameterValue("deessThreshold")->load());
+    deEsser.setFrequency(parameters.getRawParameterValue("deessFreq")->load());
+
+    equalizer.updateFilters(
+        100.0f,
+        parameters.getRawParameterValue("eqLowGain")->load(), 0.7f,
+        1000.0f,
+        parameters.getRawParameterValue("eqMidGain")->load(), 1.0f,
+        8000.0f,
+        parameters.getRawParameterValue("eqHighGain")->load(), 0.7f
+    );
+
+    exciter.setIntensity(parameters.getRawParameterValue("exciterIntensity")->load());
+    exciter.setMix(parameters.getRawParameterValue("exciterMix")->load());
+
+    // Effekte auf gesamten Buffer anwenden
+    compressor.processBlock(writebuffer);
+    deEsser.processBlock(writebuffer);
+    equalizer.processBlock(writebuffer);
+    exciter.processBlock(writebuffer);
+}
+
+
 juce::AudioProcessorEditor* VocalEnhancerProcessor::createEditor()
 {
     return new VocalEnhancerEditor(*this);
@@ -156,6 +206,8 @@ void VocalEnhancerProcessor::loadFile(const juce::File& audioFile)
         fileLoaded = false;
     }
 }
+
+
 
 void VocalEnhancerProcessor::startPlayback()
 {

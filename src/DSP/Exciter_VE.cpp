@@ -2,8 +2,8 @@
 
 Exciter_VE::Exciter_VE()
 {
-    auto coeffs = juce::dsp::IIR::Coefficients<float>::makeHighPass(44100.0, 3000.0); // >3kHz
-    *highPassFilter.state = *coeffs;
+    /* coeffs = juce::dsp::IIR::Coefficients<float>::makeHighPass(44100.0, 3000.0); // >3kHz
+    *highPassFilter.state = *coeffs;*/
 }
 
 void Exciter_VE::prepare(double sampleRate, int samplesPerBlock, int numChannels)
@@ -14,6 +14,9 @@ void Exciter_VE::prepare(double sampleRate, int samplesPerBlock, int numChannels
     spec.numChannels = static_cast<juce::uint32>(numChannels);
 
     highPassFilter.prepare(spec);
+    auto coeffs = juce::dsp::IIR::Coefficients<float>::makeHighPass(sampleRate, 3000.0);
+    *highPassFilter.state = *coeffs;
+
     exciterBuffer.setSize(numChannels, samplesPerBlock);
 }
 
@@ -43,8 +46,22 @@ void Exciter_VE::applySaturation(juce::AudioBuffer<float>& buffer)
 
 void Exciter_VE::processBlock(juce::AudioBuffer<float>& buffer)
 {
-    exciterBuffer.makeCopyOf(buffer);
+    juce::ScopedNoDenormals noDenormals;
+    jassert(buffer.getNumSamples() > 0);
+    jassert(buffer.getNumChannels() > 0);
 
+    if (buffer.getNumSamples() == 0 || buffer.getNumChannels() == 0)
+        return; // Nichts zu tun
+
+    if (   exciterBuffer.getNumChannels() < buffer.getNumChannels()
+        || exciterBuffer.getNumSamples()  < buffer.getNumSamples())
+    {
+        exciterBuffer.setSize (buffer.getNumChannels(), buffer.getNumSamples(), false, false, true);
+    }
+    for (int channel = 0; channel < buffer.getNumChannels(); ++channel)
+    {
+        exciterBuffer.copyFrom(channel, 0, buffer, channel, 0, buffer.getNumSamples());
+    }
     // Highpass > 3kHz
     juce::dsp::AudioBlock<float> block(exciterBuffer);
     juce::dsp::ProcessContextReplacing<float> context(block);
@@ -53,7 +70,10 @@ void Exciter_VE::processBlock(juce::AudioBuffer<float>& buffer)
     // Verzerren
     applySaturation(exciterBuffer);
 
+    jassert(buffer.getNumChannels() == exciterBuffer.getNumChannels());
+    jassert(buffer.getNumSamples() <= exciterBuffer.getNumSamples());
     // Dry/Wet-Mix
+    buffer.applyGain(1.0f - mix); // Original dämpfen
     for (int channel = 0; channel < buffer.getNumChannels(); ++channel)
     {
         buffer.addFrom(channel, 0, exciterBuffer, channel, 0, buffer.getNumSamples(), mix);

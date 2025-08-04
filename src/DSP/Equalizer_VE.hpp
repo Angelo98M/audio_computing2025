@@ -22,6 +22,6 @@ private:
     using Filter = juce::dsp::IIR::Filter<float>;
     using Chain = juce::dsp::ProcessorChain<Filter, Filter, Filter>;
 
-    Chain filterChain;
+    std::vector<Chain> filterChains;
     double currentSampleRate = 44100.0;
 };

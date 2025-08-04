@@ -49,6 +49,10 @@ public:
     void startPlayback();   // zum Starten
     void stopPlayback();    // zum Stoppen
     int getPlayPosition() const { return playPosition; }
+    bool getIsStandalone() const { return isStandalone; }
+    juce::AudioBuffer<float> getWriteBuffer(){return writebuffer;}
+    void prepareWriteBuffer();
+    double getLoadedSampleRate() const { return loadedSampleRate; }
 
 private:
     // DSP-Module
@@ -69,6 +73,7 @@ private:
     bool isStandalone = juce::JUCEApplicationBase::isStandaloneApp();
 
     juce::AudioBuffer<float> writebuffer;
+    double loadedSampleRate = 44100.0; // fallback default
 
     juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (VocalEnhancerProcessor)

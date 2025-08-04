@@ -54,6 +54,10 @@ private:
     std::unique_ptr<juce::FileChooser> fileChooser;
     void openFileChooser();
 
+    juce::TextButton saveButton { "Speichern" };
+    std::unique_ptr<juce::FileChooser> saveChooser;
+    void exportProcessedFile();
+
     // === Play ===
     juce::TextButton playButton { "Play" };
     juce::TextButton stopButton { "Stop" };

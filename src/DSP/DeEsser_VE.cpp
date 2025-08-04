@@ -15,13 +15,16 @@ void DeEsser_VE::prepare(double sampleRate, int samplesPerBlock, int numChannels
     spec.maximumBlockSize = static_cast<juce::uint32>(samplesPerBlock);
     spec.numChannels = static_cast<juce::uint32>(numChannels);
 
-    sibilanceBandFilter.reset();
-    sibilanceCompressor.reset();
+    sibilanceBandFilters.clear();
+    sibilanceBandFilters.resize(numChannels);
 
     auto coeffs = juce::dsp::IIR::Coefficients<float>::makeHighPass(sampleRate, currentFrequency);
-    *sibilanceBandFilter.coefficients = *coeffs;
 
-    sibilanceBandFilter.prepare(spec);
+    for (auto& filter : sibilanceBandFilters)
+    {
+        filter.reset();
+        filter.coefficients = coeffs; // Shared Pointer ok
+    }
     sibilanceCompressor.prepare(spec);
 }
 
@@ -34,12 +37,15 @@ void DeEsser_VE::processBlock(juce::AudioBuffer<float>& buffer)
     sibilantBuffer.makeCopyOf(buffer);
 
     juce::dsp::AudioBlock<float> block(sibilantBuffer);
+    for (size_t ch = 0; ch < block.getNumChannels(); ++ch)
+    {
+        auto channelBlock = block.getSingleChannelBlock(ch);
+        juce::dsp::ProcessContextReplacing<float> context(channelBlock);
+        sibilanceBandFilters[ch].process(context);
+    }
     juce::dsp::ProcessContextReplacing<float> context(block);
 
-    // 1. Nur hohe Frequenzen extrahieren
-    sibilanceBandFilter.process(context);
 
-    // 2. Diese Region komprimieren
     sibilanceCompressor.process(context);
 
     // 3. Abziehen vom Originalsignal (De-Essing)
@@ -56,7 +62,10 @@ void DeEsser_VE::setFrequency(float newValue)
 {
     currentFrequency = juce::jlimit(2000.0f, 12000.0f, newValue);
     auto coeffs = juce::dsp::IIR::Coefficients<float>::makeHighPass(44100.0f, currentFrequency);
-    *sibilanceBandFilter.coefficients = *coeffs;
+    for (auto& filter : sibilanceBandFilters)
+    {
+        filter.coefficients = coeffs;  // shared_ptr kopieren
+    }
 }
 
 void DeEsser_VE::setAttack(float newValue)
