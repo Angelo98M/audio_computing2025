@@ -106,6 +106,57 @@ VocalEnhancerEditor::VocalEnhancerEditor(VocalEnhancerProcessor& p)
     addAndMakeVisible(eqGroup);
     addAndMakeVisible(exciterGroup);
 
+    // ComboBox + Button sichtbar machen
+    addAndMakeVisible(profileComboBox);
+    addAndMakeVisible(reloadProfilesButton);
+
+    // Items laden
+    reloadProfileList();
+
+    // Profilwechsel behandeln
+    profileComboBox.onChange = [this]() {
+        auto selectedName = profileComboBox.getText();
+        if (selectedName.isNotEmpty())
+            processorRef.loadProfileFromName(selectedName);
+    };
+
+    // Manuelles Neuladen (falls du neue Dateien einfügst etc.)
+    reloadProfilesButton.onClick = [this]() {
+        reloadProfileList();
+    };
+
+    addAndMakeVisible(saveProfileButton);
+
+    saveProfileButton.onClick = [this]() {
+        auto* window = new juce::AlertWindow(
+            "Neues Profil speichern",
+            "Bitte Profilnamen eingeben:",
+            juce::AlertWindow::NoIcon
+        );
+
+        window->addTextEditor("profileName", "", "Profilname:");
+        window->addButton("OK", 1);
+        window->addButton("Abbrechen", 0);
+
+        // `enterModalState()` macht AlertWindow asynchron
+        window->enterModalState(true, juce::ModalCallbackFunction::create([this, window](int result) {
+            if (result == 1)  // OK gedrückt
+            {
+                auto profileName = window->getTextEditor("profileName")->getText().trim();
+
+                if (profileName.isNotEmpty())
+                {
+                    processorRef.saveProfileWithName(profileName);
+                    reloadProfileList(); // ComboBox neu füllen
+                }
+            }
+
+            delete window; // Fenster freigeben
+        }));
+    };
+
+
+
     // if (processorRef.getIsStandalone()) addAndMakeVisible(saveButton);
 
     setSize(755, 600);
@@ -213,6 +264,9 @@ void VocalEnhancerEditor::resized()
     loadFileButton.setBounds(640,540,100,50);
     saveButton.setBounds(530,540,100,50);
     waveformDisplay.setBounds(10,10,740,100);
+    profileComboBox.setBounds(20, 540, 200, 24);
+    reloadProfilesButton.setBounds(230, 540, 30, 24);
+    saveProfileButton.setBounds(270, 540, 120, 24);
 
 }
 
@@ -310,6 +364,23 @@ void VocalEnhancerEditor::exportProcessedFile()
         }
     });
 }
+
+void VocalEnhancerEditor::reloadProfileList()
+{
+    profileComboBox.clear();
+
+    auto profiles = processorRef.getAvailableProfiles();
+    int id = 1;
+    for (const auto& file : profiles)
+    {
+        auto name = file.getFileNameWithoutExtension();
+        profileComboBox.addItem(name, id++);
+    }
+
+    if (profileComboBox.getNumItems() > 0)
+        profileComboBox.setSelectedItemIndex(0, juce::dontSendNotification);
+}
+
 
 void VocalEnhancerEditor::timerCallback()
 {

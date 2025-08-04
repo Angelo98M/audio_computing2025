@@ -53,6 +53,10 @@ public:
     juce::AudioBuffer<float> getWriteBuffer(){return writebuffer;}
     void prepareWriteBuffer();
     double getLoadedSampleRate() const { return loadedSampleRate; }
+    juce::File getProfileDirectory() const;
+    std::vector<juce::File> getAvailableProfiles() const;
+    void saveProfileWithName(const juce::String& profileName);
+    void loadProfileFromName(const juce::String& profileName);
 
 private:
     // DSP-Module

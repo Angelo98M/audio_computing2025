@@ -183,8 +183,7 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
     return new VocalEnhancerProcessor();
 }
 
-void VocalEnhancerProcessor::loadFile(const juce::File& audioFile)
-{
+void VocalEnhancerProcessor::loadFile(const juce::File& audioFile) {
     std::unique_ptr<juce::AudioFormatReader> reader(formatManager.createReaderFor(audioFile));
 
     if (reader != nullptr)
@@ -206,6 +205,56 @@ void VocalEnhancerProcessor::loadFile(const juce::File& audioFile)
         fileLoaded = false;
     }
 }
+
+juce::File VocalEnhancerProcessor::getProfileDirectory() const
+{
+    auto dir = juce::File::getSpecialLocation(juce::File::userDocumentsDirectory)
+                    .getChildFile("VocalEnhancerProfiles");
+
+    if (!dir.exists())
+        dir.createDirectory(); // wird beim ersten Mal angelegt
+
+    return dir;
+}
+
+std::vector<juce::File> VocalEnhancerProcessor::getAvailableProfiles() const
+{
+    juce::Array<juce::File> files = getProfileDirectory().findChildFiles(juce::File::findFiles, false, "*.profile");
+
+    std::vector<juce::File> profileList;
+    for (const auto& file : files)
+        profileList.push_back(file);
+
+    return profileList;
+}
+
+void VocalEnhancerProcessor::saveProfileWithName(const juce::String& profileName)
+{
+    auto file = getProfileDirectory().getChildFile(profileName + ".profile");
+
+    auto state = parameters.copyState();
+    std::unique_ptr<juce::XmlElement> xml(state.createXml());
+
+    if (xml)
+        xml->writeTo(file);
+}
+
+void VocalEnhancerProcessor::loadProfileFromName(const juce::String& profileName)
+{
+    auto file = getProfileDirectory().getChildFile(profileName + ".profile");
+
+    if (!file.existsAsFile())
+        return;
+
+    std::unique_ptr<juce::XmlElement> xml(juce::XmlDocument::parse(file));
+    if (xml && xml->hasTagName(parameters.state.getType()))
+    {
+        juce::ValueTree tree = juce::ValueTree::fromXml(*xml);
+        parameters.replaceState(tree);
+    }
+}
+
+
 
 
 

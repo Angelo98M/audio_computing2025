@@ -62,6 +62,11 @@ private:
     juce::TextButton playButton { "Play" };
     juce::TextButton stopButton { "Stop" };
 
+    juce::ComboBox profileComboBox;
+    juce::TextButton reloadProfilesButton { "🔄" };
+    juce::TextButton saveProfileButton { "Profil speichern" };
+    void reloadProfileList();
+
     WaveformDisplay waveformDisplay;
     void timerCallback();
 
