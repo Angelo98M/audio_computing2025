@@ -19,50 +19,51 @@ void VocalEnhancerProcessor::prepareToPlay(double sampleRate, int samplesPerBloc
     exciter.prepare(sampleRate, samplesPerBlock, numChannels);
 }
 
-void VocalEnhancerProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer&)
-{
+void VocalEnhancerProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer&) {
     juce::ScopedNoDenormals noDenormals;
 
     const int numSamplesToProcess = buffer.getNumSamples();
     const int numChannels = buffer.getNumChannels();
 
-    // === Datei-Playback ===
-    if (fileLoaded && isPlaying)
-    {
-        // Sicherstellen, dass wir nicht über das Ende hinaus lesen
-        const int remainingSamples = loadedBuffer.getNumSamples() - playPosition;
-        const int samplesToCopy = juce::jmin(numSamplesToProcess, remainingSamples);
-
-        for (int ch = 0; ch < numChannels; ++ch)
+    if (isStandalone) {
+        // === Datei-Playback ===
+        if (fileLoaded && isPlaying)
         {
-            if (ch < loadedBuffer.getNumChannels())
-            {
-                buffer.copyFrom(ch, 0, loadedBuffer, ch, playPosition, samplesToCopy);
-            }
-            else
-            {
-                buffer.clear(ch, 0, numSamplesToProcess); // falls zu viele Output-Kanäle
-            }
-        }
+            // Sicherstellen, dass wir nicht über das Ende hinaus lesen
+            const int remainingSamples = loadedBuffer.getNumSamples() - playPosition;
+            const int samplesToCopy = juce::jmin(numSamplesToProcess, remainingSamples);
 
-        // Rest mit Nullen auffüllen, falls Datei kürzer als Buffer
-        if (samplesToCopy < numSamplesToProcess)
-        {
             for (int ch = 0; ch < numChannels; ++ch)
-                buffer.clear(ch, samplesToCopy, numSamplesToProcess - samplesToCopy);
+            {
+                if (ch < loadedBuffer.getNumChannels())
+                {
+                    buffer.copyFrom(ch, 0, loadedBuffer, ch, playPosition, samplesToCopy);
+                }
+                else
+                {
+                    buffer.clear(ch, 0, numSamplesToProcess); // falls zu viele Output-Kanäle
+                }
+            }
+
+            // Rest mit Nullen auffüllen, falls Datei kürzer als Buffer
+            if (samplesToCopy < numSamplesToProcess)
+            {
+                for (int ch = 0; ch < numChannels; ++ch)
+                    buffer.clear(ch, samplesToCopy, numSamplesToProcess - samplesToCopy);
+            }
+
+            playPosition += samplesToCopy;
+
+            if (playPosition >= loadedBuffer.getNumSamples())
+            {
+                stopPlayback(); // Oder playPosition = 0; // für Looping
+            }
         }
-
-        playPosition += samplesToCopy;
-
-        if (playPosition >= loadedBuffer.getNumSamples())
+        else
         {
-            stopPlayback(); // Oder playPosition = 0; // für Looping
+            // Falls keine Datei oder Wiedergabe gestoppt
+            buffer.clear();
         }
-    }
-    else
-    {
-        // Falls keine Datei oder Wiedergabe gestoppt
-        buffer.clear();
     }
 
     // Parameter abrufen
@@ -86,13 +87,16 @@ void VocalEnhancerProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
     exciter.setIntensity(parameters.getRawParameterValue("exciterIntensity")->load());
     exciter.setMix(parameters.getRawParameterValue("exciterMix")->load());
 
-    // Processing Chain
-    compressor.processBlock(buffer);
-    deEsser.processBlock(buffer);
-    equalizer.processBlock(buffer);
-    exciter.processBlock(buffer);
+    if (numSamplesToProcess > 0)
+    {
+        // Processing Chain
+        compressor.processBlock(buffer);
+        deEsser.processBlock(buffer);
+        equalizer.processBlock(buffer);
+        exciter.processBlock(buffer);
+        if (isStandalone) writebuffer.makeCopyOf(buffer);
+    }
 }
-
 juce::AudioProcessorEditor* VocalEnhancerProcessor::createEditor()
 {
     return new VocalEnhancerEditor(*this);

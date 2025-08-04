@@ -3,6 +3,7 @@
 VocalEnhancerEditor::VocalEnhancerEditor(VocalEnhancerProcessor& p)
     : AudioProcessorEditor(p), processorRef(p)
 {
+
     startTimerHz(30);
     // === Compressor ===
     configureSlider(compThresholdSlider);
@@ -208,29 +209,7 @@ void VocalEnhancerEditor::resized()
     stopButton.setBounds(830,540,50,50);
     loadFileButton.setBounds(890,540,100,50);
     waveformDisplay.setBounds(10,10,1000,100);
-    //TODO: remove code below
-    /*auto bounds = getLocalBounds().reduced(10);
-    auto top = bounds.removeFromTop(150);
-    auto middle = bounds.removeFromTop(120);
-    auto bottom = bounds.removeFromTop(90);
-    auto fotter = bounds.removeFromTop(60);
 
-    auto layoutRow = [](auto& area, auto& s1, auto& s2, auto& s3, auto& s4)
-    {
-        auto width = area.getWidth() / 4;
-        s1.setBounds(area.removeFromLeft(width));
-        s2.setBounds(area.removeFromLeft(width));
-        s3.setBounds(area.removeFromLeft(width));
-        s4.setBounds(area.removeFromLeft(width));
-    };
-
-    auto bottomBar = bounds.removeFromBottom(40);
-
-
-    layoutRow(top, compThresholdSlider, compRatioSlider, compAttackSlider, compReleaseSlider);
-    layoutRow(middle, deEsserThresholdSlider, deEsserFreqSlider, eqLowGainSlider, eqMidGainSlider);
-    layoutRow(bottom, eqHighGainSlider, exciterIntensitySlider, exciterMixSlider, exciterMixSlider);
-    layoutRow(fotter,playButton,stopButton,loadFileButton,playButton);// letzter doppelt, falls leer*/
 }
 
 void VocalEnhancerEditor::openFileChooser()
