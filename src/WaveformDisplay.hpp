@@ -18,7 +18,7 @@ public:
 
     void resized() override {}
 
-    void setPlayheadPosition(int samplePosition)
+    void setPlayheadPosition(float samplePosition)
     {
         playheadPosition = samplePosition;
         repaint();
@@ -37,7 +37,7 @@ public:
 
 private:
     juce::AudioBuffer<float> audioBuffer;
-    int playheadPosition = 0;
+    float playheadPosition = 0;
     float attackMs = 100.0f;
     float decayMs = 100.0f;
     float sustainLevel = 0.8f;

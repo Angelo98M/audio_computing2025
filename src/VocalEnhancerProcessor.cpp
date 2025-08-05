@@ -25,7 +25,6 @@ void VocalEnhancerProcessor::prepareToPlay(double sampleRate, int samplesPerBloc
 void VocalEnhancerProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer&) {
 
     juce::ScopedNoDenormals noDenormals;
-
     const int numSamplesToProcess = buffer.getNumSamples();
     const int numChannels = buffer.getNumChannels();
 
@@ -133,6 +132,11 @@ void VocalEnhancerProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
         currentLevel.store(maxLevel); // atomar speichern
 
     }
+    if (isStandalone)
+    {
+        playHeadPositon = static_cast<float>(playPosition) / static_cast<float>(loadedBuffer.getNumSamples());
+    }
+
 
 }
 

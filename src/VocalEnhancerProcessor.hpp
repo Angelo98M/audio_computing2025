@@ -40,7 +40,7 @@ public:
     bool isFileLoaded() const { return fileLoaded; }
     void startPlayback();   // zum Starten
     void stopPlayback();    // zum Stoppen
-    int getPlayPosition() const { return playPosition; }
+    float getPlayHeadPosition() const { return playHeadPositon; }
     bool getIsStandalone() const { return isStandalone; }
     juce::AudioBuffer<float> getWriteBuffer(){return writebuffer;}
     const juce::AudioBuffer<float>& getWaveBuffer() const { return waveBuffer; }
@@ -68,6 +68,7 @@ private:
 
     // === play ===
     int playPosition = 0;
+    float playHeadPositon = 0;
     bool isPlaying = false;
 
     bool isStandalone = juce::JUCEApplicationBase::isStandaloneApp();

@@ -437,7 +437,7 @@ void VocalEnhancerEditor::exportProcessedFile()
         }
 
 
-        outputStream.release(); // Übergibt ownership an writer
+        outputStream.release();
 
         if (writer->writeFromAudioSampleBuffer(buffer, 0, buffer.getNumSamples()))
         {
@@ -470,23 +470,22 @@ void VocalEnhancerEditor::reloadProfileList()
 
 void VocalEnhancerEditor::timerCallback()
 {
+
     if (!processorRef.getIsStandalone()) {
         if (processorRef.getWaveBuffer().getNumSamples() > 0)
         {
             waveformDisplay.setAudioBuffer(processorRef.getWaveBuffer());
-            waveformDisplay.setPlayheadPosition(processorRef.getPlayPosition());
+            waveformDisplay.setPlayheadPosition(processorRef.getPlayHeadPosition());
         }
-
-
     }
     else {
+
         if (processorRef.isFileLoaded())
         {
-            waveformDisplay.setPlayheadPosition(processorRef.getPlayPosition());
+            waveformDisplay.setPlayheadPosition(processorRef.getPlayHeadPosition());
 
         }
     }
-    waveformDisplay.repaint();
 }
 
 void VocalEnhancerEditor::updateADSRVisual()
