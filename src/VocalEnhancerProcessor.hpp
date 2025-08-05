@@ -88,6 +88,9 @@ private:
     juce::AudioBuffer<float> waveBuffer;
     bool wasPlaying = false;
 
+    void dspChain(juce::AudioBuffer<float>& buffer);
+    void loadParameters();
+
 
 
     juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();

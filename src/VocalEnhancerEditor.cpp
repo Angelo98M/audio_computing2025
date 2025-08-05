@@ -27,10 +27,14 @@ VocalEnhancerEditor::VocalEnhancerEditor(VocalEnhancerProcessor& p)
     configureSlider(eqLowGainSlider);
     configureSlider(eqMidGainSlider);
     configureSlider(eqHighGainSlider);
+    configureSlider(eqLowPassSlider);
+    configureSlider(eqHighPassSlider);
 
     eqLowGainAttachment  = std::make_unique<SliderAttachment>(processorRef.parameters, "eqLowGain", eqLowGainSlider);
     eqMidGainAttachment  = std::make_unique<SliderAttachment>(processorRef.parameters, "eqMidGain", eqMidGainSlider);
     eqHighGainAttachment = std::make_unique<SliderAttachment>(processorRef.parameters, "eqHighGain", eqHighGainSlider);
+    eqLowPassAttachment = std::make_unique<SliderAttachment>(processorRef.parameters, "eqLowPassFreq", eqLowPassSlider);
+    eqHighPassAttachment = std::make_unique<SliderAttachment>(processorRef.parameters, "eqHighPassFreq", eqHighPassSlider);
 
     // === Exciter ===
     configureSlider(exciterIntensitySlider);
@@ -38,6 +42,18 @@ VocalEnhancerEditor::VocalEnhancerEditor(VocalEnhancerProcessor& p)
 
     exciterIntensityAttachment = std::make_unique<SliderAttachment>(processorRef.parameters, "exciterIntensity", exciterIntensitySlider);
     exciterMixAttachment       = std::make_unique<SliderAttachment>(processorRef.parameters, "exciterMix", exciterMixSlider);
+
+    //ADSR
+
+    configureSlider(adsrAttackSlider);
+    configureSlider(adsrDecaySlider);
+    configureSlider(adsrSustainSlider);
+    configureSlider(adsrReleaseSlider);
+
+    adsrAttackAttachment  = std::make_unique<SliderAttachment>(processorRef.parameters, "adsrAttack",  adsrAttackSlider);
+    adsrDecayAttachment   = std::make_unique<SliderAttachment>(processorRef.parameters, "adsrDecay",   adsrDecaySlider);
+    adsrSustainAttachment = std::make_unique<SliderAttachment>(processorRef.parameters, "adsrSustain", adsrSustainSlider);
+    adsrReleaseAttachment = std::make_unique<SliderAttachment>(processorRef.parameters, "adsrRelease", adsrReleaseSlider);
 
 
     // === File Browser ===
@@ -60,8 +76,9 @@ VocalEnhancerEditor::VocalEnhancerEditor(VocalEnhancerProcessor& p)
     auto sliders = {
         &compThresholdSlider, &compRatioSlider, &compAttackSlider, &compReleaseSlider,
         &deEsserThresholdSlider, &deEsserFreqSlider,
-        &eqLowGainSlider, &eqMidGainSlider, &eqHighGainSlider,
-        &exciterIntensitySlider, &exciterMixSlider
+        &eqLowGainSlider, &eqMidGainSlider, &eqHighGainSlider,&eqLowPassSlider,&eqHighPassSlider,
+        &exciterIntensitySlider, &exciterMixSlider,
+        &adsrAttackSlider, &adsrDecaySlider, &adsrSustainSlider,&adsrReleaseSlider
     };
 
     auto setupLabel = [this](juce::Label& label, const juce::String& text)
@@ -86,10 +103,18 @@ VocalEnhancerEditor::VocalEnhancerEditor(VocalEnhancerProcessor& p)
     setupLabel(eqLowGainLabel, "Low Gain");
     setupLabel(eqMidGainLabel, "Mid Gain");
     setupLabel(eqHighGainLabel, "High Gain");
+    setupLabel(eqLowPassLabel, "Low Pass");
+    setupLabel(eqHighPassLabel, "High Pass");
 
     // === Exciter Labels ===
     setupLabel(exciterIntensityLabel, "Intensity");
     setupLabel(exciterMixLabel, "Mix");
+
+    // === ADSR Labels ===
+    setupLabel(adsrAttackLabel, "Attack");
+    setupLabel(adsrDecayLabel, "Decay");
+    setupLabel(adsrSustainLabel, "Sustain");
+    setupLabel(adsrReleaseLabel, "Release");
 
     addAndMakeVisible(waveformDisplay);
 
@@ -101,30 +126,13 @@ VocalEnhancerEditor::VocalEnhancerEditor(VocalEnhancerProcessor& p)
     addAndMakeVisible(deEsserGroup);
     addAndMakeVisible(eqGroup);
     addAndMakeVisible(exciterGroup);
+    addAndMakeVisible(adsrGroup);
 
     // ComboBox + Button sichtbar machen
     addAndMakeVisible(profileComboBox);
     addAndMakeVisible(reloadProfilesButton);
 
-    configureSlider(adsrAttackSlider);
-    configureSlider(adsrDecaySlider);
-    configureSlider(adsrSustainSlider);
-    configureSlider(adsrReleaseSlider);
 
-    adsrAttackAttachment  = std::make_unique<SliderAttachment>(processorRef.parameters, "adsrAttack",  adsrAttackSlider);
-    adsrDecayAttachment   = std::make_unique<SliderAttachment>(processorRef.parameters, "adsrDecay",   adsrDecaySlider);
-    adsrSustainAttachment = std::make_unique<SliderAttachment>(processorRef.parameters, "adsrSustain", adsrSustainSlider);
-    adsrReleaseAttachment = std::make_unique<SliderAttachment>(processorRef.parameters, "adsrRelease", adsrReleaseSlider);
-
-    setupLabel(adsrAttackLabel, "Attack");
-    setupLabel(adsrDecayLabel, "Decay");
-    setupLabel(adsrSustainLabel, "Sustain");
-    setupLabel(adsrReleaseLabel, "Release");
-
-    addAndMakeVisible(adsrAttackSlider);
-    addAndMakeVisible(adsrDecaySlider);
-    addAndMakeVisible(adsrSustainSlider);
-    addAndMakeVisible(adsrReleaseSlider);
     // Erstinitialisierung mit aktuellen Werten
     waveformDisplay.setADSR(
         processorRef.parameters.getRawParameterValue("adsrAttack")->load(),
@@ -145,10 +153,6 @@ VocalEnhancerEditor::VocalEnhancerEditor(VocalEnhancerProcessor& p)
     adsrReleaseSlider.onValueChange = [this]() {
         updateADSRVisual();
     };
-
-
-    addAndMakeVisible(adsrGroup);
-
 
     // Items laden
     reloadProfileList();
@@ -279,7 +283,7 @@ void VocalEnhancerEditor::resized()
 
     {
         auto row = eqArea;
-        auto width = row.getWidth() / 3;
+        auto width = row.getWidth() / 5;
 
         auto s1 = row.removeFromLeft(width);
         eqLowGainLabel.setBounds(s1.withHeight(20));
@@ -292,6 +296,14 @@ void VocalEnhancerEditor::resized()
         auto s3 = row.removeFromLeft(width);
         eqHighGainLabel.setBounds(s3.withHeight(20));
         eqHighGainSlider.setBounds(s3.withTrimmedTop(25));
+
+        auto s4 = row.removeFromLeft(width);
+        eqLowPassLabel.setBounds(s4.withHeight(20));
+        eqLowPassSlider.setBounds(s4.withTrimmedTop(25));
+
+        auto s5 = row.removeFromLeft(width);
+        eqHighPassLabel.setBounds(s5.withHeight(20));
+        eqHighPassSlider.setBounds(s5.withTrimmedTop(25));
     }
 
     {
@@ -306,16 +318,6 @@ void VocalEnhancerEditor::resized()
         exciterMixLabel.setBounds(s2.withHeight(20));
         exciterMixSlider.setBounds(s2.withTrimmedTop(25));
     }
-
-    //600
-    playButton.setBounds(410,690,50,50);
-    stopButton.setBounds(470,690,50,50);
-    loadFileButton.setBounds(640,690,100,50);
-    saveButton.setBounds(530,690,100,50);
-    waveformDisplay.setBounds(10,10,740,100);
-    profileComboBox.setBounds(20, 690, 200, 24);
-    reloadProfilesButton.setBounds(230, 690, 30, 24);
-    saveProfileButton.setBounds(270, 690, 120, 24);
 
     adsrGroup.setBounds(20, 530, 400, 120);
     auto adsrArea = adsrGroup.getBounds().reduced(10);
@@ -340,6 +342,15 @@ void VocalEnhancerEditor::resized()
         adsrReleaseLabel.setBounds(s4.withHeight(20));
         adsrReleaseSlider.setBounds(s4.withTrimmedTop(25));
     }
+
+    playButton.setBounds(410,690,50,50);
+    stopButton.setBounds(470,690,50,50);
+    loadFileButton.setBounds(640,690,100,50);
+    saveButton.setBounds(530,690,100,50);
+    waveformDisplay.setBounds(10,10,740,100);
+    profileComboBox.setBounds(20, 690, 200, 24);
+    reloadProfilesButton.setBounds(230, 690, 30, 24);
+    saveProfileButton.setBounds(270, 690, 120, 24);
     testLabel.setBounds(30,30,200,150);
     levelMeter.setBounds(500, 530, 50, 150); // Rechts am Rand
 

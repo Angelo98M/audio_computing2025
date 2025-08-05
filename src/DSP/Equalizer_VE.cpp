@@ -16,19 +16,25 @@ void Equalizer_VE::prepare(double sampleRate, int samplesPerBlock, int numChanne
         chain.prepare(spec);
 }
 
-void Equalizer_VE::updateFilters(float lowFreq, float lowGain, float lowQ,
-                                float midFreq, float midGain, float midQ,
-                                float highFreq, float highGain, float highQ)
+void Equalizer_VE::updateFilters(float lowPassFreq,
+                                 float lowFreq, float lowGain, float lowQ,
+                                 float midFreq, float midGain, float midQ,
+                                 float highFreq, float highGain, float highQ,
+                                 float highPassFreq)
 {
+    auto lowPassCoeffs  = juce::dsp::IIR::Coefficients<float>::makeLowPass(currentSampleRate, lowPassFreq);
     auto lowCoeffs = juce::dsp::IIR::Coefficients<float>::makeLowShelf(currentSampleRate, lowFreq, lowQ, juce::Decibels::decibelsToGain(lowGain));
     auto midCoeffs = juce::dsp::IIR::Coefficients<float>::makePeakFilter(currentSampleRate, midFreq, midQ, juce::Decibels::decibelsToGain(midGain));
     auto highCoeffs = juce::dsp::IIR::Coefficients<float>::makeHighShelf(currentSampleRate, highFreq, highQ, juce::Decibels::decibelsToGain(highGain));
+    auto highPassCoeffs = juce::dsp::IIR::Coefficients<float>::makeHighPass(currentSampleRate, highPassFreq);
 
     for (auto& chain : filterChains)
     {
-        *chain.get<0>().coefficients = *lowCoeffs;
-        *chain.get<1>().coefficients = *midCoeffs;
-        *chain.get<2>().coefficients = *highCoeffs;
+        *chain.get<0>().coefficients = *lowPassCoeffs;
+        *chain.get<1>().coefficients = *lowCoeffs;
+        *chain.get<2>().coefficients = *midCoeffs;
+        *chain.get<3>().coefficients = *highCoeffs;
+        *chain.get<4>().coefficients = *highPassCoeffs;
     }
 }
 

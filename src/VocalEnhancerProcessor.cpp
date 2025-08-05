@@ -102,35 +102,7 @@ void VocalEnhancerProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
         }
     }
 
-
-
-    // Parameter abrufen
-    compressor.setThreshold(parameters.getRawParameterValue("compThreshold")->load());
-    compressor.setRatio(parameters.getRawParameterValue("compRatio")->load());
-    compressor.setAttack(parameters.getRawParameterValue("compAttack")->load());
-    compressor.setRelease(parameters.getRawParameterValue("compRelease")->load());
-
-    deEsser.setThreshold(parameters.getRawParameterValue("deessThreshold")->load());
-    deEsser.setFrequency(parameters.getRawParameterValue("deessFreq")->load());
-
-    adsrParams.attack  = parameters.getRawParameterValue("adsrAttack")->load() / 1000.0f;
-    adsrParams.decay   = parameters.getRawParameterValue("adsrDecay")->load() / 1000.0f;
-    adsrParams.sustain = parameters.getRawParameterValue("adsrSustain")->load();
-    adsrParams.release = parameters.getRawParameterValue("adsrRelease")->load() / 1000.0f;
-
-    equalizer.updateFilters(
-        100.0f, // LowFreq (optional extern param)
-        parameters.getRawParameterValue("eqLowGain")->load(), 0.7f,
-        1000.0f,
-        parameters.getRawParameterValue("eqMidGain")->load(), 1.0f,
-        8000.0f,
-        parameters.getRawParameterValue("eqHighGain")->load(), 0.7f
-    );
-
-    exciter.setIntensity(parameters.getRawParameterValue("exciterIntensity")->load());
-    exciter.setMix(parameters.getRawParameterValue("exciterMix")->load());
-
-    adsr.setParameters(adsrParams);
+    loadParameters();
 
     if (numSamplesToProcess > 0)
     {
@@ -145,11 +117,8 @@ void VocalEnhancerProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
             }
         }
 
-        // Processing Chain
-        compressor.processBlock(buffer);
-        deEsser.processBlock(buffer);
-        equalizer.processBlock(buffer);
-        exciter.processBlock(buffer);
+        dspChain(buffer);
+
 
         float maxLevel = 0.0f;
         for (int ch = 0; ch < buffer.getNumChannels(); ++ch)
@@ -195,12 +164,14 @@ void VocalEnhancerProcessor::prepareWriteBuffer()
     deEsser.setFrequency(parameters.getRawParameterValue("deessFreq")->load());
 
     equalizer.updateFilters(
+        parameters.getRawParameterValue("eqLowPassFreq")->load(),
         100.0f,
         parameters.getRawParameterValue("eqLowGain")->load(), 0.7f,
         1000.0f,
         parameters.getRawParameterValue("eqMidGain")->load(), 1.0f,
         8000.0f,
-        parameters.getRawParameterValue("eqHighGain")->load(), 0.7f
+        parameters.getRawParameterValue("eqHighGain")->load(), 0.7f,
+        parameters.getRawParameterValue("eqHighPassFreq")->load()
     );
 
     exciter.setIntensity(parameters.getRawParameterValue("exciterIntensity")->load());
@@ -217,6 +188,45 @@ void VocalEnhancerProcessor::prepareWriteBuffer()
 juce::AudioProcessorEditor* VocalEnhancerProcessor::createEditor()
 {
     return new VocalEnhancerEditor(*this);
+}
+
+void VocalEnhancerProcessor::dspChain(juce::AudioBuffer<float>& buffer) {
+    compressor.processBlock(buffer);
+    deEsser.processBlock(buffer);
+    equalizer.processBlock(buffer);
+    exciter.processBlock(buffer);
+}
+
+void VocalEnhancerProcessor::loadParameters() {
+    // Parameter abrufen
+    compressor.setThreshold(parameters.getRawParameterValue("compThreshold")->load());
+    compressor.setRatio(parameters.getRawParameterValue("compRatio")->load());
+    compressor.setAttack(parameters.getRawParameterValue("compAttack")->load());
+    compressor.setRelease(parameters.getRawParameterValue("compRelease")->load());
+
+    deEsser.setThreshold(parameters.getRawParameterValue("deessThreshold")->load());
+    deEsser.setFrequency(parameters.getRawParameterValue("deessFreq")->load());
+
+    adsrParams.attack  = parameters.getRawParameterValue("adsrAttack")->load() / 1000.0f;
+    adsrParams.decay   = parameters.getRawParameterValue("adsrDecay")->load() / 1000.0f;
+    adsrParams.sustain = parameters.getRawParameterValue("adsrSustain")->load();
+    adsrParams.release = parameters.getRawParameterValue("adsrRelease")->load() / 1000.0f;
+
+    equalizer.updateFilters(
+        parameters.getRawParameterValue("eqLowPassFreq")->load(),
+        100.0f,
+        parameters.getRawParameterValue("eqLowGain")->load(), 0.7f,
+        1000.0f,
+        parameters.getRawParameterValue("eqMidGain")->load(), 1.0f,
+        8000.0f,
+        parameters.getRawParameterValue("eqHighGain")->load(), 0.7f,
+        parameters.getRawParameterValue("eqHighPassFreq")->load()
+    );
+
+    exciter.setIntensity(parameters.getRawParameterValue("exciterIntensity")->load());
+    exciter.setMix(parameters.getRawParameterValue("exciterMix")->load());
+
+    adsr.setParameters(adsrParams);
 }
 
 juce::AudioProcessorValueTreeState::ParameterLayout VocalEnhancerProcessor::createParameterLayout()
@@ -237,6 +247,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout VocalEnhancerProcessor::crea
     params.push_back(std::make_unique<juce::AudioParameterFloat>("eqLowGain",  "EQ Low Gain",  -24.0f, 24.0f, 0.0f));
     params.push_back(std::make_unique<juce::AudioParameterFloat>("eqMidGain",  "EQ Mid Gain",  -24.0f, 24.0f, 0.0f));
     params.push_back(std::make_unique<juce::AudioParameterFloat>("eqHighGain", "EQ High Gain", -24.0f, 24.0f, 0.0f));
+    params.push_back(std::make_unique<juce::AudioParameterFloat>("eqLowPassFreq", "EQ LowPassFreq",juce::NormalisableRange<float>(20.0f, 20000.0f, 1.0f, 0.25f),20000.0f));
+    params.push_back(std::make_unique<juce::AudioParameterFloat>("eqHighPassFreq", "EQ HighPassFreq",juce::NormalisableRange<float>(20.0f, 20000.0f, 1.0f, 0.25f),20.0f));
 
     // === Exciter ===
     params.push_back(std::make_unique<juce::AudioParameterFloat>("exciterIntensity", "Exciter Intensity", 0.0f, 1.0f, 0.7f));

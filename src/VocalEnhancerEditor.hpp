@@ -22,7 +22,7 @@ private:
     // === Sliders ===
     juce::Slider compThresholdSlider, compRatioSlider, compAttackSlider, compReleaseSlider;
     juce::Slider deEsserThresholdSlider, deEsserFreqSlider;
-    juce::Slider eqLowGainSlider, eqMidGainSlider, eqHighGainSlider;
+    juce::Slider eqLowGainSlider, eqMidGainSlider, eqHighGainSlider,eqLowPassSlider,eqHighPassSlider;
     juce::Slider exciterIntensitySlider, exciterMixSlider;
 
     // === Attachments (ValueTree Binding) ===
@@ -33,7 +33,7 @@ private:
 
     std::unique_ptr<SliderAttachment> deEsserThresholdAttachment, deEsserFreqAttachment;
 
-    std::unique_ptr<SliderAttachment> eqLowGainAttachment, eqMidGainAttachment, eqHighGainAttachment;
+    std::unique_ptr<SliderAttachment> eqLowGainAttachment, eqMidGainAttachment, eqHighGainAttachment,eqLowPassAttachment,eqHighPassAttachment;
 
     std::unique_ptr<SliderAttachment> exciterIntensityAttachment, exciterMixAttachment;
 
@@ -46,7 +46,7 @@ private:
     // === Labels ===
     juce::Label compThresholdLabel, compRatioLabel, compAttackLabel, compReleaseLabel;
     juce::Label deEsserThresholdLabel, deEsserFreqLabel;
-    juce::Label eqLowGainLabel, eqMidGainLabel, eqHighGainLabel;
+    juce::Label eqLowGainLabel, eqMidGainLabel, eqHighGainLabel,eqLowPassLabel,eqHighPassLabel;
     juce::Label exciterIntensityLabel, exciterMixLabel;
 
     void configureSlider(juce::Slider& slider);
