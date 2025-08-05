@@ -161,7 +161,7 @@ VocalEnhancerEditor::VocalEnhancerEditor(VocalEnhancerProcessor& p)
     profileComboBox.onChange = [this]() {
         auto selectedName = profileComboBox.getText();
         if (selectedName.isNotEmpty())
-            processorRef.loadProfileFromName(selectedName);
+            loadProfileFromName(selectedName);
     };
 
     // Manuelles Neuladen (falls du neue Dateien einfügst etc.)
@@ -190,7 +190,7 @@ VocalEnhancerEditor::VocalEnhancerEditor(VocalEnhancerProcessor& p)
 
                 if (profileName.isNotEmpty())
                 {
-                    processorRef.saveProfileWithName(profileName);
+                    saveProfileWithName(profileName);
                     reloadProfileList(); // ComboBox neu füllen
                 }
             }
@@ -210,7 +210,6 @@ VocalEnhancerEditor::VocalEnhancerEditor(VocalEnhancerProcessor& p)
 
     addAndMakeVisible(levelMeter);
 
-    addAndMakeVisible(testLabel);
     setSize(755, 750);
 }
 
@@ -351,7 +350,6 @@ void VocalEnhancerEditor::resized()
     profileComboBox.setBounds(20, 690, 200, 24);
     reloadProfilesButton.setBounds(230, 690, 30, 24);
     saveProfileButton.setBounds(270, 690, 120, 24);
-    testLabel.setBounds(30,30,200,150);
     levelMeter.setBounds(500, 530, 50, 150); // Rechts am Rand
 
 
@@ -457,7 +455,7 @@ void VocalEnhancerEditor::reloadProfileList()
 {
     profileComboBox.clear();
 
-    auto profiles = processorRef.getAvailableProfiles();
+    auto profiles = getAvailableProfiles();
     int id = 1;
     for (const auto& file : profiles)
     {
@@ -473,7 +471,6 @@ void VocalEnhancerEditor::reloadProfileList()
 void VocalEnhancerEditor::timerCallback()
 {
     if (!processorRef.getIsStandalone()) {
-        testLabel.setText(std::to_string(processorRef.getWaveBuffer().getNumSamples()),juce::dontSendNotification);
         if (processorRef.getWaveBuffer().getNumSamples() > 0)
         {
             waveformDisplay.setAudioBuffer(processorRef.getWaveBuffer());
@@ -500,5 +497,45 @@ void VocalEnhancerEditor::updateADSRVisual()
     processorRef.parameters.getRawParameterValue("adsrSustain")->load(),
     processorRef.parameters.getRawParameterValue("adsrRelease")->load()
     );
+}
+
+
+juce::File VocalEnhancerEditor::getProfileDirectory() const {
+    auto dir = juce::File::getSpecialLocation(juce::File::userDocumentsDirectory)
+                    .getChildFile("VocalEnhancerProfiles");
+
+    if (!dir.exists())
+        dir.createDirectory(); // wird beim ersten Mal angelegt
+
+    return dir;
+}
+
+std::vector<juce::File> VocalEnhancerEditor::getAvailableProfiles() const {
+    juce::Array<juce::File> files = getProfileDirectory().findChildFiles(juce::File::findFiles, false, "*.profile");
+
+    std::vector<juce::File> profileList;
+    for (const auto& file : files)
+        profileList.push_back(file);
+
+    return profileList;
+}
+
+void VocalEnhancerEditor::saveProfileWithName(const juce::String &profileName) {
+    auto file = getProfileDirectory().getChildFile(profileName + ".profile");
+
+    auto state = processorRef.getParameters();
+    std::unique_ptr<juce::XmlElement> xml(state.createXml());
+
+    if (xml)
+        xml->writeTo(file);
+}
+
+void VocalEnhancerEditor::loadProfileFromName(const juce::String &profileName) {
+    auto file = getProfileDirectory().getChildFile(profileName + ".profile");
+
+    if (!file.existsAsFile())
+        return;
+
+    processorRef.loadParametersformXML(juce::XmlDocument::parse(file));
 }
 

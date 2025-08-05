@@ -81,8 +81,12 @@ private:
 
     LevelMeterComponent levelMeter;
 
+    juce::AudioFormatManager formatManager;
 
-    juce::Label testLabel;
+    juce::File getProfileDirectory() const;
+    std::vector<juce::File> getAvailableProfiles() const;
+    void saveProfileWithName(const juce::String& profileName);
+    void loadProfileFromName(const juce::String& profileName);
 
 
 

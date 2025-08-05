@@ -107,7 +107,7 @@ void VocalEnhancerProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
     if (numSamplesToProcess > 0)
     {
 
-        // Lautstärke modulieren
+        // ADSR
         for (int ch = 0; ch < buffer.getNumChannels(); ++ch)
         {
             auto* channelData = buffer.getWritePointer(ch);
@@ -119,7 +119,7 @@ void VocalEnhancerProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
 
         dspChain(buffer);
 
-
+        //get Volum
         float maxLevel = 0.0f;
         for (int ch = 0; ch < buffer.getNumChannels(); ++ch)
         {
@@ -291,56 +291,13 @@ void VocalEnhancerProcessor::loadFile(const juce::File& audioFile) {
     }
 }
 
-juce::File VocalEnhancerProcessor::getProfileDirectory() const
-{
-    auto dir = juce::File::getSpecialLocation(juce::File::userDocumentsDirectory)
-                    .getChildFile("VocalEnhancerProfiles");
-
-    if (!dir.exists())
-        dir.createDirectory(); // wird beim ersten Mal angelegt
-
-    return dir;
-}
-
-std::vector<juce::File> VocalEnhancerProcessor::getAvailableProfiles() const
-{
-    juce::Array<juce::File> files = getProfileDirectory().findChildFiles(juce::File::findFiles, false, "*.profile");
-
-    std::vector<juce::File> profileList;
-    for (const auto& file : files)
-        profileList.push_back(file);
-
-    return profileList;
-}
-
-void VocalEnhancerProcessor::saveProfileWithName(const juce::String& profileName)
-{
-    auto file = getProfileDirectory().getChildFile(profileName + ".profile");
-
-    auto state = parameters.copyState();
-    std::unique_ptr<juce::XmlElement> xml(state.createXml());
-
-    if (xml)
-        xml->writeTo(file);
-}
-
-void VocalEnhancerProcessor::loadProfileFromName(const juce::String& profileName)
-{
-    auto file = getProfileDirectory().getChildFile(profileName + ".profile");
-
-    if (!file.existsAsFile())
-        return;
-
-    std::unique_ptr<juce::XmlElement> xml(juce::XmlDocument::parse(file));
+void VocalEnhancerProcessor::loadParametersformXML(std::unique_ptr<juce::XmlElement> xml) {
     if (xml && xml->hasTagName(parameters.state.getType()))
     {
         juce::ValueTree tree = juce::ValueTree::fromXml(*xml);
         parameters.replaceState(tree);
     }
 }
-
-
-
 
 
 void VocalEnhancerProcessor::startPlayback()
