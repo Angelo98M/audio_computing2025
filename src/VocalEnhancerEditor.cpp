@@ -41,7 +41,7 @@ VocalEnhancerEditor::VocalEnhancerEditor(VocalEnhancerProcessor& p)
 
 
     // === File Browser ===
-    addAndMakeVisible(loadFileButton);
+
     loadFileButton.onClick = [this]() { openFileChooser(); };
 
     saveButton.onClick = [this] {exportProcessedFile();};
@@ -200,12 +200,13 @@ VocalEnhancerEditor::VocalEnhancerEditor(VocalEnhancerProcessor& p)
         // === Play ===
         addAndMakeVisible(playButton);
         addAndMakeVisible(stopButton);
+        addAndMakeVisible(loadFileButton);
     }
 
 
     addAndMakeVisible(levelMeter);
 
-
+    addAndMakeVisible(testLabel);
     setSize(755, 750);
 }
 
@@ -339,7 +340,7 @@ void VocalEnhancerEditor::resized()
         adsrReleaseLabel.setBounds(s4.withHeight(20));
         adsrReleaseSlider.setBounds(s4.withTrimmedTop(25));
     }
-
+    testLabel.setBounds(30,30,200,150);
     levelMeter.setBounds(500, 530, 50, 150); // Rechts am Rand
 
 
@@ -460,11 +461,24 @@ void VocalEnhancerEditor::reloadProfileList()
 
 void VocalEnhancerEditor::timerCallback()
 {
-    if (processorRef.isFileLoaded())
-    {
-        waveformDisplay.setPlayheadPosition(processorRef.getPlayPosition());
+    if (!processorRef.getIsStandalone()) {
+        testLabel.setText(std::to_string(processorRef.getWaveBuffer().getNumSamples()),juce::dontSendNotification);
+        if (processorRef.getWaveBuffer().getNumSamples() > 0)
+        {
+            waveformDisplay.setAudioBuffer(processorRef.getWaveBuffer());
+            waveformDisplay.setPlayheadPosition(processorRef.getPlayPosition());
+        }
+
 
     }
+    else {
+        if (processorRef.isFileLoaded())
+        {
+            waveformDisplay.setPlayheadPosition(processorRef.getPlayPosition());
+
+        }
+    }
+    waveformDisplay.repaint();
 }
 
 void VocalEnhancerEditor::updateADSRVisual()

@@ -71,7 +71,7 @@ private:
     void reloadProfileList();
 
     WaveformDisplay waveformDisplay;
-    void timerCallback();
+    void timerCallback() override;
     void updateADSRVisual();
 
     juce::Slider adsrAttackSlider, adsrDecaySlider, adsrSustainSlider, adsrReleaseSlider;
@@ -81,6 +81,8 @@ private:
 
     LevelMeterComponent levelMeter;
 
+
+    juce::Label testLabel;
 
 
 

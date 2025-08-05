@@ -23,6 +23,7 @@ void VocalEnhancerProcessor::prepareToPlay(double sampleRate, int samplesPerBloc
 }
 
 void VocalEnhancerProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer&) {
+
     juce::ScopedNoDenormals noDenormals;
 
     const int numSamplesToProcess = buffer.getNumSamples();
@@ -68,6 +69,40 @@ void VocalEnhancerProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
             buffer.clear();
         }
     }
+    else {
+        juce::AudioPlayHead::CurrentPositionInfo posInfo;
+        if (auto* playHead = getPlayHead())
+        {
+            if (playHead->getCurrentPosition(posInfo))
+            {
+                if (posInfo.isPlaying)
+                {
+                    // Reaper spielt → ADSR starten
+                    if (!wasPlaying)
+                    {
+                        adsr.noteOn();
+                        wasPlaying = true;
+                    }
+                }
+                else
+                {
+                    // Reaper gestoppt → ADSR stoppen
+                    if (wasPlaying)
+                    {
+                        adsr.noteOff();
+                        wasPlaying = false;
+                    }
+                }
+            }
+        }
+        if (buffer.getNumSamples() > 0)
+        {
+            waveBuffer.makeCopyOf(buffer);
+
+        }
+    }
+
+
 
     // Parameter abrufen
     compressor.setThreshold(parameters.getRawParameterValue("compThreshold")->load());
@@ -129,6 +164,7 @@ void VocalEnhancerProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
         currentLevel.store(maxLevel); // atomar speichern
 
     }
+
 }
 
 void VocalEnhancerProcessor::prepareWriteBuffer()

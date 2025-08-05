@@ -32,6 +32,8 @@ public:
         repaint();
     }
 
+    bool hasBuffer();
+
 
 private:
     juce::AudioBuffer<float> audioBuffer;

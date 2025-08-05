@@ -51,6 +51,7 @@ public:
     int getPlayPosition() const { return playPosition; }
     bool getIsStandalone() const { return isStandalone; }
     juce::AudioBuffer<float> getWriteBuffer(){return writebuffer;}
+    const juce::AudioBuffer<float>& getWaveBuffer() const { return waveBuffer; }
     void prepareWriteBuffer();
     double getLoadedSampleRate() const { return loadedSampleRate; }
     juce::File getProfileDirectory() const;
@@ -58,6 +59,7 @@ public:
     void saveProfileWithName(const juce::String& profileName);
     void loadProfileFromName(const juce::String& profileName);
     std::atomic<float> currentLevel = 0.0f;
+
 private:
     // DSP-Module
     Equalizer_VE equalizer;
@@ -82,6 +84,9 @@ private:
     juce::ADSR adsr;
     juce::ADSR::Parameters adsrParams;
 
+    bool hasCopiedFromHost = false;
+    juce::AudioBuffer<float> waveBuffer;
+    bool wasPlaying = false;
 
 
 
