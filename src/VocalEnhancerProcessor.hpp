@@ -57,7 +57,7 @@ public:
     std::vector<juce::File> getAvailableProfiles() const;
     void saveProfileWithName(const juce::String& profileName);
     void loadProfileFromName(const juce::String& profileName);
-
+    std::atomic<float> currentLevel = 0.0f;
 private:
     // DSP-Module
     Equalizer_VE equalizer;
@@ -78,6 +78,12 @@ private:
 
     juce::AudioBuffer<float> writebuffer;
     double loadedSampleRate = 44100.0; // fallback default
+
+    juce::ADSR adsr;
+    juce::ADSR::Parameters adsrParams;
+
+
+
 
     juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (VocalEnhancerProcessor)

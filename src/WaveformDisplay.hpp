@@ -23,11 +23,26 @@ public:
         playheadPosition = samplePosition;
         repaint();
     }
+    void setADSR(float a, float d, float s, float r)
+    {
+        attackMs = a;
+        decayMs = d;
+        sustainLevel = s;
+        releaseMs = r;
+        repaint();
+    }
 
 
 private:
     juce::AudioBuffer<float> audioBuffer;
     int playheadPosition = 0;
+    float attackMs = 100.0f;
+    float decayMs = 100.0f;
+    float sustainLevel = 0.8f;
+    float releaseMs = 200.0f;
+
+
+
 };
 
 

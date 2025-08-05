@@ -1,7 +1,7 @@
 #include "VocalEnhancerEditor.hpp"
 
 VocalEnhancerEditor::VocalEnhancerEditor(VocalEnhancerProcessor& p)
-    : AudioProcessorEditor(p), processorRef(p)
+    : AudioProcessorEditor(p), processorRef(p),levelMeter(p.currentLevel)
 {
 
     startTimerHz(30);
@@ -45,10 +45,6 @@ VocalEnhancerEditor::VocalEnhancerEditor(VocalEnhancerProcessor& p)
     loadFileButton.onClick = [this]() { openFileChooser(); };
 
     saveButton.onClick = [this] {exportProcessedFile();};
-
-    // === Play ===
-    addAndMakeVisible(playButton);
-    addAndMakeVisible(stopButton);
 
     playButton.onClick = [this]() {
         if (processorRef.isFileLoaded())
@@ -110,6 +106,50 @@ VocalEnhancerEditor::VocalEnhancerEditor(VocalEnhancerProcessor& p)
     addAndMakeVisible(profileComboBox);
     addAndMakeVisible(reloadProfilesButton);
 
+    configureSlider(adsrAttackSlider);
+    configureSlider(adsrDecaySlider);
+    configureSlider(adsrSustainSlider);
+    configureSlider(adsrReleaseSlider);
+
+    adsrAttackAttachment  = std::make_unique<SliderAttachment>(processorRef.parameters, "adsrAttack",  adsrAttackSlider);
+    adsrDecayAttachment   = std::make_unique<SliderAttachment>(processorRef.parameters, "adsrDecay",   adsrDecaySlider);
+    adsrSustainAttachment = std::make_unique<SliderAttachment>(processorRef.parameters, "adsrSustain", adsrSustainSlider);
+    adsrReleaseAttachment = std::make_unique<SliderAttachment>(processorRef.parameters, "adsrRelease", adsrReleaseSlider);
+
+    setupLabel(adsrAttackLabel, "Attack");
+    setupLabel(adsrDecayLabel, "Decay");
+    setupLabel(adsrSustainLabel, "Sustain");
+    setupLabel(adsrReleaseLabel, "Release");
+
+    addAndMakeVisible(adsrAttackSlider);
+    addAndMakeVisible(adsrDecaySlider);
+    addAndMakeVisible(adsrSustainSlider);
+    addAndMakeVisible(adsrReleaseSlider);
+    // Erstinitialisierung mit aktuellen Werten
+    waveformDisplay.setADSR(
+        processorRef.parameters.getRawParameterValue("adsrAttack")->load(),
+        processorRef.parameters.getRawParameterValue("adsrDecay")->load(),
+        processorRef.parameters.getRawParameterValue("adsrSustain")->load(),
+        processorRef.parameters.getRawParameterValue("adsrRelease")->load()
+    );
+
+    adsrAttackSlider.onValueChange = [this]() {
+        updateADSRVisual();
+    };
+    adsrDecaySlider.onValueChange = [this]() {
+        updateADSRVisual();
+    };
+    adsrSustainSlider.onValueChange = [this]() {
+        updateADSRVisual();
+    };
+    adsrReleaseSlider.onValueChange = [this]() {
+        updateADSRVisual();
+    };
+
+
+    addAndMakeVisible(adsrGroup);
+
+
     // Items laden
     reloadProfileList();
 
@@ -155,11 +195,18 @@ VocalEnhancerEditor::VocalEnhancerEditor(VocalEnhancerProcessor& p)
         }));
     };
 
+    if (processorRef.getIsStandalone()) {
+        //addAndMakeVisible(saveButton);
+        // === Play ===
+        addAndMakeVisible(playButton);
+        addAndMakeVisible(stopButton);
+    }
 
 
-    // if (processorRef.getIsStandalone()) addAndMakeVisible(saveButton);
+    addAndMakeVisible(levelMeter);
 
-    setSize(755, 600);
+
+    setSize(755, 750);
 }
 
 void VocalEnhancerEditor::configureSlider(juce::Slider& slider)
@@ -259,14 +306,43 @@ void VocalEnhancerEditor::resized()
         exciterMixSlider.setBounds(s2.withTrimmedTop(25));
     }
 
-    playButton.setBounds(410,540,50,50);
-    stopButton.setBounds(470,540,50,50);
-    loadFileButton.setBounds(640,540,100,50);
-    saveButton.setBounds(530,540,100,50);
+    //600
+    playButton.setBounds(410,690,50,50);
+    stopButton.setBounds(470,690,50,50);
+    loadFileButton.setBounds(640,690,100,50);
+    saveButton.setBounds(530,690,100,50);
     waveformDisplay.setBounds(10,10,740,100);
-    profileComboBox.setBounds(20, 540, 200, 24);
-    reloadProfilesButton.setBounds(230, 540, 30, 24);
-    saveProfileButton.setBounds(270, 540, 120, 24);
+    profileComboBox.setBounds(20, 690, 200, 24);
+    reloadProfilesButton.setBounds(230, 690, 30, 24);
+    saveProfileButton.setBounds(270, 690, 120, 24);
+
+    adsrGroup.setBounds(20, 530, 400, 120);
+    auto adsrArea = adsrGroup.getBounds().reduced(10);
+    // === Compressor Sliders + Labels ===
+    {
+        auto row = adsrArea;
+        auto width = row.getWidth() / 4;
+
+        auto s1 = row.removeFromLeft(width);
+        adsrAttackLabel.setBounds(s1.withHeight(20));
+        adsrAttackSlider.setBounds(s1.withTrimmedTop(25));
+
+        auto s2 = row.removeFromLeft(width);
+        adsrDecayLabel.setBounds(s2.withHeight(20));
+        adsrDecaySlider.setBounds(s2.withTrimmedTop(25));
+
+        auto s3 = row.removeFromLeft(width);
+        adsrSustainLabel.setBounds(s3.withHeight(20));
+        adsrSustainSlider.setBounds(s3.withTrimmedTop(25));
+
+        auto s4 = row.removeFromLeft(width);
+        adsrReleaseLabel.setBounds(s4.withHeight(20));
+        adsrReleaseSlider.setBounds(s4.withTrimmedTop(25));
+    }
+
+    levelMeter.setBounds(500, 530, 50, 150); // Rechts am Rand
+
+
 
 }
 
@@ -387,6 +463,17 @@ void VocalEnhancerEditor::timerCallback()
     if (processorRef.isFileLoaded())
     {
         waveformDisplay.setPlayheadPosition(processorRef.getPlayPosition());
+
     }
+}
+
+void VocalEnhancerEditor::updateADSRVisual()
+{
+    waveformDisplay.setADSR(
+    processorRef.parameters.getRawParameterValue("adsrAttack")->load(),
+    processorRef.parameters.getRawParameterValue("adsrDecay")->load(),
+    processorRef.parameters.getRawParameterValue("adsrSustain")->load(),
+    processorRef.parameters.getRawParameterValue("adsrRelease")->load()
+    );
 }
 

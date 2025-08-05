@@ -49,6 +49,27 @@ void WaveformDisplay::paint(juce::Graphics &g) {
             g.setColour(juce::Colours::red);
             g.drawLine(playheadX, 0.0f, playheadX, (float)getHeight(), 2.0f);
         }
+        // === ADSR Hüllkurve ===
+        g.setColour(juce::Colours::yellow.withAlpha(0.8f));
+        juce::Path adsrPath;
 
+        auto bounds = getLocalBounds().toFloat().reduced(5);
+        auto width = bounds.getWidth();
+        auto height = bounds.getHeight();
+
+        float totalMs = attackMs + decayMs + releaseMs + 1.0f;
+        float attackX = (attackMs / totalMs) * width;
+        float decayX  = (decayMs  / totalMs) * width;
+        float releaseX = (releaseMs / totalMs) * width;
+        float sustainY = bounds.getBottom() - (sustainLevel * bounds.getHeight());
+
+        // Start
+        adsrPath.startNewSubPath(bounds.getX(), bounds.getBottom()); // 0ms
+        adsrPath.lineTo(bounds.getX() + attackX, bounds.getY()); // Attack
+        adsrPath.lineTo(bounds.getX() + attackX + decayX, sustainY); // Decay
+        adsrPath.lineTo(bounds.getRight() - releaseX, sustainY); // Sustain
+        adsrPath.lineTo(bounds.getRight(), bounds.getBottom()); // Release
+
+        g.strokePath(adsrPath, juce::PathStrokeType(2.0f));
     }
 }

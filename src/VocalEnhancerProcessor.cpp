@@ -14,10 +14,12 @@ void VocalEnhancerProcessor::prepareToPlay(double sampleRate, int samplesPerBloc
     const auto numChannels = getTotalNumOutputChannels();
     loadedSampleRate = sampleRate;
 
+    adsr.setSampleRate(loadedSampleRate);
     equalizer.prepare(loadedSampleRate, samplesPerBlock, numChannels);
     compressor.prepare(loadedSampleRate, samplesPerBlock, numChannels);
     deEsser.prepare(loadedSampleRate, samplesPerBlock, numChannels);
     exciter.prepare(loadedSampleRate, samplesPerBlock, numChannels);
+
 }
 
 void VocalEnhancerProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer&) {
@@ -76,6 +78,11 @@ void VocalEnhancerProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
     deEsser.setThreshold(parameters.getRawParameterValue("deessThreshold")->load());
     deEsser.setFrequency(parameters.getRawParameterValue("deessFreq")->load());
 
+    adsrParams.attack  = parameters.getRawParameterValue("adsrAttack")->load() / 1000.0f;
+    adsrParams.decay   = parameters.getRawParameterValue("adsrDecay")->load() / 1000.0f;
+    adsrParams.sustain = parameters.getRawParameterValue("adsrSustain")->load();
+    adsrParams.release = parameters.getRawParameterValue("adsrRelease")->load() / 1000.0f;
+
     equalizer.updateFilters(
         100.0f, // LowFreq (optional extern param)
         parameters.getRawParameterValue("eqLowGain")->load(), 0.7f,
@@ -88,13 +95,39 @@ void VocalEnhancerProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce
     exciter.setIntensity(parameters.getRawParameterValue("exciterIntensity")->load());
     exciter.setMix(parameters.getRawParameterValue("exciterMix")->load());
 
+    adsr.setParameters(adsrParams);
+
     if (numSamplesToProcess > 0)
     {
+
+        // Lautstärke modulieren
+        for (int ch = 0; ch < buffer.getNumChannels(); ++ch)
+        {
+            auto* channelData = buffer.getWritePointer(ch);
+            for (int i = 0; i < buffer.getNumSamples(); ++i)
+            {
+                channelData[i] *= adsr.getNextSample();
+            }
+        }
+
         // Processing Chain
         compressor.processBlock(buffer);
         deEsser.processBlock(buffer);
         equalizer.processBlock(buffer);
         exciter.processBlock(buffer);
+
+        float maxLevel = 0.0f;
+        for (int ch = 0; ch < buffer.getNumChannels(); ++ch)
+        {
+            auto* data = buffer.getReadPointer(ch);
+            for (int i = 0; i < buffer.getNumSamples(); ++i)
+            {
+                maxLevel = std::max(maxLevel, std::abs(data[i]));
+            }
+        }
+
+        currentLevel.store(maxLevel); // atomar speichern
+
     }
 }
 
@@ -115,8 +148,6 @@ void VocalEnhancerProcessor::prepareWriteBuffer()
     deEsser.prepare(loadedSampleRate, blockSize, writebuffer.getNumChannels());
     equalizer.prepare(loadedSampleRate, blockSize, writebuffer.getNumChannels());
     exciter.prepare(loadedSampleRate, blockSize, writebuffer.getNumChannels());
-
-
 
     // Parameter wie in processBlock holen
     compressor.setThreshold(parameters.getRawParameterValue("compThreshold")->load());
@@ -174,6 +205,12 @@ juce::AudioProcessorValueTreeState::ParameterLayout VocalEnhancerProcessor::crea
     // === Exciter ===
     params.push_back(std::make_unique<juce::AudioParameterFloat>("exciterIntensity", "Exciter Intensity", 0.0f, 1.0f, 0.7f));
     params.push_back(std::make_unique<juce::AudioParameterFloat>("exciterMix",       "Exciter Mix",       0.0f, 1.0f, 0.5f));
+
+    // === ADSR ===
+    params.push_back(std::make_unique<juce::AudioParameterFloat>("adsrAttack",  "ADSR Attack",  1.0f, 5000.0f, 100.0f));
+    params.push_back(std::make_unique<juce::AudioParameterFloat>("adsrDecay",   "ADSR Decay",   1.0f, 5000.0f, 100.0f));
+    params.push_back(std::make_unique<juce::AudioParameterFloat>("adsrSustain", "ADSR Sustain", 0.0f, 1.0f,    0.8f));
+    params.push_back(std::make_unique<juce::AudioParameterFloat>("adsrRelease", "ADSR Release", 1.0f, 5000.0f, 300.0f));
 
 
     return { params.begin(), params.end() };
@@ -262,11 +299,13 @@ void VocalEnhancerProcessor::startPlayback()
 {
     playPosition = 0;
     isPlaying = true;
+    adsr.noteOn();
 }
 
 void VocalEnhancerProcessor::stopPlayback()
 {
     isPlaying = false;
+    adsr.noteOff();
 }
 
 void VocalEnhancerProcessor::getStateInformation(juce::MemoryBlock& destData) {

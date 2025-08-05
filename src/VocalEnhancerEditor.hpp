@@ -3,6 +3,8 @@
 #include <juce_gui_basics/juce_gui_basics.h>
 #include "VocalEnhancerProcessor.hpp"
 #include "WaveformDisplay.hpp"
+#include "LevelMeterComponent.hpp"
+
 
 class VocalEnhancerEditor : public juce::AudioProcessorEditor, public juce::Timer
 {
@@ -39,6 +41,7 @@ private:
     juce::GroupComponent deEsserGroup   { "DeEsser Group", "De-Esser" };
     juce::GroupComponent eqGroup        { "EQ Group", "Equalizer" };
     juce::GroupComponent exciterGroup   { "Exciter Group", "Exciter" };
+    juce::GroupComponent adsrGroup   { "Test Group", "Test" };
 
     // === Labels ===
     juce::Label compThresholdLabel, compRatioLabel, compAttackLabel, compReleaseLabel;
@@ -63,12 +66,23 @@ private:
     juce::TextButton stopButton { "Stop" };
 
     juce::ComboBox profileComboBox;
-    juce::TextButton reloadProfilesButton { "🔄" };
+    juce::TextButton reloadProfilesButton { "Neu Laden" };
     juce::TextButton saveProfileButton { "Profil speichern" };
     void reloadProfileList();
 
     WaveformDisplay waveformDisplay;
     void timerCallback();
+    void updateADSRVisual();
+
+    juce::Slider adsrAttackSlider, adsrDecaySlider, adsrSustainSlider, adsrReleaseSlider;
+    juce::Label adsrAttackLabel, adsrDecayLabel, adsrSustainLabel, adsrReleaseLabel;
+
+    std::unique_ptr<SliderAttachment> adsrAttackAttachment, adsrDecayAttachment, adsrSustainAttachment, adsrReleaseAttachment;
+
+    LevelMeterComponent levelMeter;
+
+
+
 
 
 
