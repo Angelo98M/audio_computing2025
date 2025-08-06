@@ -1,7 +1,7 @@
 #include "VocalEnhancerEditor.hpp"
 
 VocalEnhancerEditor::VocalEnhancerEditor(VocalEnhancerProcessor& p)
-    : AudioProcessorEditor(p), processorRef(p),levelMeter(p.currentLevel)
+    : AudioProcessorEditor(p), processorRef(p),levelMeter(p.currentLevel),waveformDisplay(p.getIsStandalone())
 {
 
     startTimerHz(30);
@@ -470,21 +470,16 @@ void VocalEnhancerEditor::reloadProfileList()
 
 void VocalEnhancerEditor::timerCallback()
 {
-
-    if (!processorRef.getIsStandalone()) {
-        if (processorRef.getWaveBuffer().getNumSamples() > 0)
-        {
-            waveformDisplay.setAudioBuffer(processorRef.getWaveBuffer());
-            waveformDisplay.setPlayheadPosition(processorRef.getPlayHeadPosition());
-        }
-    }
-    else {
+    if (processorRef.getIsStandalone()){
 
         if (processorRef.isFileLoaded())
         {
             waveformDisplay.setPlayheadPosition(processorRef.getPlayHeadPosition());
 
         }
+    }
+    else {
+        waveformDisplay.repaint();
     }
 }
 
