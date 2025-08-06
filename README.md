@@ -85,6 +85,7 @@ Dieses Projekt erzeugt folgende Formate:
 │   ├── VocalEnhancerProcessor.cpp
 │   └── WaveformDisplay.cpp
 ```
+Für die Dokumentation [hier](Documentation/Dokumentation.md)
 
 ---
 
