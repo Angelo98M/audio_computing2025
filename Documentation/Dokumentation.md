@@ -18,7 +18,7 @@ Das Projekt ist modular aufgebaut und folgt der klassischen Trennung von **GUI**
 - `DSP/DeEsser_VE.cpp`: De-Esser zur Entfernung von Zischlauten
 - `DSP/Exciter_VE.cpp`: Exciter zur Anhebung hoher Frequenzen und Verbesserung der Sprachverständlichkeit
 
-für nähren einblick [Zur Doxygen-Dokumentation](html/index.html)
+für nähren einblick <a href="html/index.html" target="_blank">Zur Doxygen-Dokumentation</a>
 
 ---
 
