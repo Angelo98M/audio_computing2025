@@ -30,9 +30,10 @@ void DeEsser_VE::prepare(double sampleRate, int samplesPerBlock, int numChannels
 
 void DeEsser_VE::processBlock(juce::AudioBuffer<float>& buffer)
 {
+    if (buffer.getNumSamples() == 0 || buffer.getNumChannels() == 0)
+        return;
     if (bypassed)
         return;
-
     juce::AudioBuffer<float> sibilantBuffer;
     sibilantBuffer.makeCopyOf(buffer);
 

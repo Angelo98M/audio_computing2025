@@ -51,7 +51,9 @@ void Exciter_VE::processBlock(juce::AudioBuffer<float>& buffer)
     jassert(buffer.getNumChannels() > 0);
 
     if (buffer.getNumSamples() == 0 || buffer.getNumChannels() == 0)
-        return; // Nichts zu tun
+        return;
+    if (bypassed)
+        return;
 
     if (   exciterBuffer.getNumChannels() < buffer.getNumChannels()
         || exciterBuffer.getNumSamples()  < buffer.getNumSamples())

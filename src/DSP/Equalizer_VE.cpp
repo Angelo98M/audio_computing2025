@@ -40,6 +40,11 @@ void Equalizer_VE::updateFilters(float lowPassFreq,
 
 void Equalizer_VE::processBlock(juce::AudioBuffer<float>& buffer)
 {
+    if (buffer.getNumSamples() == 0 || buffer.getNumChannels() == 0)
+        return;
+    if (bypassed)
+        return;
+
     const int numChannels = buffer.getNumChannels();
     juce::dsp::AudioBlock<float> fullBlock(buffer);
 

@@ -48,6 +48,13 @@ public:
      */
     void setMix(float newValue);
 
+    /**
+     * @brief Aktiviert oder deaktiviert den Exciter-Effekt.
+     *
+     * @param shouldBypass Wenn true, wird der Effekt umgangen (Bypass).
+     */
+    void setBypass(bool shouldBypass);
+
 private:
     /** @brief Verhältnis zwischen unbearbeitetem und bearbeitetem Signal. */
     float mix = 0.5f;
@@ -73,4 +80,7 @@ private:
      * @param buffer Der Audiobuffer, der verzerrt werden soll.
      */
     void applySaturation(juce::AudioBuffer<float>& buffer);
+
+    /** @brief Gibt an, ob der Exciter-Effekt aktuell umgangen wird. */
+    bool bypassed = false;
 };

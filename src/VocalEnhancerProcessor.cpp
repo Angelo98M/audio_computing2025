@@ -195,9 +195,9 @@ juce::AudioProcessorEditor* VocalEnhancerProcessor::createEditor()
 }
 
 void VocalEnhancerProcessor::dspChain(juce::AudioBuffer<float>& buffer) {
-    compressor.processBlock(buffer);
     deEsser.processBlock(buffer);
     equalizer.processBlock(buffer);
+    compressor.processBlock(buffer);
     exciter.processBlock(buffer);
 }
 

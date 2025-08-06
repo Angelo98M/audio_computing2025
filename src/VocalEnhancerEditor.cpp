@@ -207,6 +207,66 @@ VocalEnhancerEditor::VocalEnhancerEditor(VocalEnhancerProcessor& p)
         addAndMakeVisible(loadFileButton);
     }
 
+    addAndMakeVisible(equalizerToggleButton);
+    addAndMakeVisible(exciterToggleButton);
+    addAndMakeVisible(deEsserToggleButton);
+    addAndMakeVisible(compressorToggleButton);
+
+    compressorToggleButton.setButtonText("");
+    compressorToggleButton.setClickingTogglesState(true);
+    compressorToggleButton.setColour(juce::ToggleButton::tickColourId, juce::Colours::green);
+
+
+    deEsserToggleButton.setButtonText("");
+    deEsserToggleButton.setClickingTogglesState(true);
+    deEsserToggleButton.setColour(juce::ToggleButton::tickColourId, juce::Colours::green);
+
+    equalizerToggleButton.setButtonText("");
+    equalizerToggleButton.setClickingTogglesState(true);
+    equalizerToggleButton.setColour(juce::ToggleButton::tickColourId, juce::Colours::green);
+
+    exciterToggleButton.setButtonText("");
+    exciterToggleButton.setClickingTogglesState(true);
+    exciterToggleButton.setColour(juce::ToggleButton::tickColourId, juce::Colours::green);
+
+
+
+    equalizerToggleButton.onClick = [this]() {
+        if (equalizerToggleButton.getToggleState()) {
+            processorRef.setEqualizerBypass(true);
+        }
+        else {
+            processorRef.setEqualizerBypass(false);
+        }
+    };
+
+    exciterToggleButton.onClick = [this]() {
+        if (exciterToggleButton.getToggleState()) {
+            processorRef.setExciterBypass(true);
+        }
+        else {
+            processorRef.setExciterBypass(false);
+        }
+    };
+
+    deEsserToggleButton.onClick = [this]() {
+        if (deEsserToggleButton.getToggleState()) {
+            processorRef.setDesserBypass(true);
+        }
+        else{
+            processorRef.setDesserBypass(false);
+        }
+
+    };
+
+    compressorToggleButton.onClick = [this]() {
+        if (compressorToggleButton.getToggleState()) {
+            processorRef.setCompressorBypass(true);
+        }
+        else {
+            processorRef.setCompressorBypass(false);
+        }
+    };
 
     addAndMakeVisible(levelMeter);
 
@@ -248,7 +308,7 @@ void VocalEnhancerEditor::resized()
     // === Compressor Sliders + Labels ===
     {
         auto row = compressorArea;
-        auto width = row.getWidth() / 4;
+        auto width = row.getWidth() / 5;
 
         auto s1 = row.removeFromLeft(width);
         compThresholdLabel.setBounds(s1.withHeight(20));
@@ -265,11 +325,14 @@ void VocalEnhancerEditor::resized()
         auto s4 = row.removeFromLeft(width);
         compReleaseLabel.setBounds(s4.withHeight(20));
         compReleaseSlider.setBounds(s4.withTrimmedTop(25));
+
+        auto s5 = row.removeFromLeft(width);
+        compressorToggleButton.setBounds(s5.withTrimmedTop(25));
     }
 
     {
         auto row = deEsserArea;
-        auto width = row.getWidth() / 2;
+        auto width = row.getWidth() / 3;
 
         auto s1 = row.removeFromLeft(width);
         deEsserThresholdLabel.setBounds(s1.withHeight(20));
@@ -278,11 +341,14 @@ void VocalEnhancerEditor::resized()
         auto s2 = row.removeFromLeft(width);
         deEsserFreqLabel.setBounds(s2.withHeight(20));
         deEsserFreqSlider.setBounds(s2.withTrimmedTop(25));
+
+        auto s3 = row.removeFromLeft(width);
+        deEsserToggleButton.setBounds(s3.withTrimmedTop(25));
     }
 
     {
         auto row = eqArea;
-        auto width = row.getWidth() / 5;
+        auto width = row.getWidth() / 6;
 
         auto s1 = row.removeFromLeft(width);
         eqLowGainLabel.setBounds(s1.withHeight(20));
@@ -303,11 +369,14 @@ void VocalEnhancerEditor::resized()
         auto s5 = row.removeFromLeft(width);
         eqHighPassLabel.setBounds(s5.withHeight(20));
         eqHighPassSlider.setBounds(s5.withTrimmedTop(25));
+
+        auto s6 = row.removeFromLeft(width);
+        equalizerToggleButton.setBounds(s6.withHeight(20));
     }
 
     {
         auto row = exciterArea;
-        auto width = row.getWidth() / 2;
+        auto width = row.getWidth() / 3;
 
         auto s1 = row.removeFromLeft(width);
         exciterIntensityLabel.setBounds(s1.withHeight(20));
@@ -316,6 +385,9 @@ void VocalEnhancerEditor::resized()
         auto s2 = row.removeFromLeft(width);
         exciterMixLabel.setBounds(s2.withHeight(20));
         exciterMixSlider.setBounds(s2.withTrimmedTop(25));
+
+        auto s3 = row.removeFromLeft(width);
+        exciterToggleButton.setBounds(s3.withHeight(20));
     }
 
     adsrGroup.setBounds(20, 530, 400, 120);

@@ -34,7 +34,11 @@ public:
      * @brief Aktualisiert die Filter-Koeffizienten basierend auf den übergebenen Parametern.
      *
      * Diese Methode konfiguriert alle fünf Filtertypen pro Kanal:
-     * LowPass, LowShelf, Peak (Mid), HighShelf und HighPass.
+     * - LowPass
+     * - LowShelf
+     * - Peak (Mid)
+     * - HighShelf
+     * - HighPass
      *
      * @param lowPassFreq Frequenz des LowPass-Filters (Hz).
      * @param lowFreq Frequenz des LowShelf-Filters (Hz).
@@ -57,9 +61,20 @@ public:
     /**
      * @brief Verarbeitet einen Audiobuffer mithilfe der aktuellen Filtereinstellungen.
      *
+     * Wenn der Equalizer deaktiviert (bypassed) ist, bleibt der Audiobuffer unverändert.
+     *
      * @param buffer Der Audiobuffer, der bearbeitet werden soll.
      */
     void processBlock(juce::AudioBuffer<float>& buffer);
+
+    /**
+     * @brief Aktiviert oder deaktiviert den Equalizer.
+     *
+     * Wenn der Equalizer auf "bypassed" gesetzt wird, wird der Audiobuffer nicht verändert.
+     *
+     * @param shouldBypass true deaktiviert die Filterbearbeitung, false aktiviert sie.
+     */
+    void setBypass(bool shouldBypass) { bypassed = shouldBypass; }
 
 private:
     /**
@@ -82,4 +97,9 @@ private:
      * @brief Die aktuelle Abtastrate (Hz).
      */
     double currentSampleRate = 44100.0;
+
+    /**
+     * @brief Gibt an, ob der Equalizer-Effekt derzeit deaktiviert (bypassed) ist.
+     */
+    bool bypassed = false;
 };

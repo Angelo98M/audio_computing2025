@@ -22,7 +22,9 @@ public:
      */
     VocalEnhancerEditor(VocalEnhancerProcessor& processor);
 
-    /** @brief Destruktor. */
+    /**
+     * @brief Destruktor.
+     */
     ~VocalEnhancerEditor() override = default;
 
     /**
@@ -37,7 +39,9 @@ public:
     void resized() override;
 
 private:
-    /** @brief Referenz auf den AudioProcessor. */
+    /**
+     * @brief Referenz auf den AudioProcessor.
+     */
     VocalEnhancerProcessor& processorRef;
 
     // === Sliders ===
@@ -56,23 +60,26 @@ private:
 
     // === Attachments ===
 
+    /// Typalias für Slider-Attachments
     using SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
 
-    // Kompressor-Attachments
+    /// Kompressor-Attachments
     std::unique_ptr<SliderAttachment> compThresholdAttachment, compRatioAttachment;
     std::unique_ptr<SliderAttachment> compAttackAttachment, compReleaseAttachment;
 
-    // De-Esser-Attachments
+    /// De-Esser-Attachments
     std::unique_ptr<SliderAttachment> deEsserThresholdAttachment, deEsserFreqAttachment;
 
-    // EQ-Attachments
+    /// EQ-Attachments
     std::unique_ptr<SliderAttachment> eqLowGainAttachment, eqMidGainAttachment, eqHighGainAttachment;
     std::unique_ptr<SliderAttachment> eqLowPassAttachment, eqHighPassAttachment;
 
-    // Exciter-Attachments
+    /// Exciter-Attachments
     std::unique_ptr<SliderAttachment> exciterIntensityAttachment, exciterMixAttachment;
 
-    // === Gruppen (visuelle Trennung) ===
+    // === Gruppenkomponenten ===
+
+    /// Gruppierung der GUI-Komponenten
     juce::GroupComponent compressorGroup { "Compressor Group", "Compressor" };
     juce::GroupComponent deEsserGroup   { "DeEsser Group", "De-Esser" };
     juce::GroupComponent eqGroup        { "EQ Group", "Equalizer" };
@@ -93,8 +100,16 @@ private:
     /// Labels für Exciter
     juce::Label exciterIntensityLabel, exciterMixLabel;
 
+    // === Effektein-/ausschalten ===
+
+    /// Toggle-Buttons zur Aktivierung der Effekte
+    juce::ToggleButton compressorToggleButton;
+    juce::ToggleButton equalizerToggleButton;
+    juce::ToggleButton exciterToggleButton;
+    juce::ToggleButton deEsserToggleButton;
+
     /**
-     * @brief Konfiguriert grundlegende Eigenschaften eines Sliders (Look & Feel, Farbe etc.).
+     * @brief Konfiguriert grundlegende Eigenschaften eines Sliders.
      * @param slider Der zu konfigurierende Slider.
      */
     void configureSlider(juce::Slider& slider);
@@ -105,80 +120,101 @@ private:
     juce::TextButton loadFileButton { "Datei Laden" };
     std::unique_ptr<juce::FileChooser> fileChooser;
 
-    /// Button zum Speichern eines bearbeiteten Files
+    /// Button zum Speichern eines bearbeiteten Audiosignals
     juce::TextButton saveButton { "Speichern" };
     std::unique_ptr<juce::FileChooser> saveChooser;
 
     /**
-     * @brief Öffnet den Dateidialog zum Laden einer Audiodatei.
+     * @brief Öffnet den Dateidialog zum Laden einer Datei.
      */
     void openFileChooser();
 
     /**
-     * @brief Exportiert das bearbeitete Audiosignal.
+     * @brief Exportiert das bearbeitete Audiosignal als neue Datei.
      */
     void exportProcessedFile();
 
-    // === Playback-Steuerung ===
+    // === Wiedergabesteuerung ===
+
+    /// Button zur Wiedergabe
     juce::TextButton playButton { "Play" };
+
+    /// Button zum Stoppen
     juce::TextButton stopButton { "Stop" };
 
-    // === Profile (Presets) ===
+    // === Profile / Presets ===
+
+    /// Dropdown-Menü für Profile
     juce::ComboBox profileComboBox;
+
+    /// Button zum Neuladen der Profile
     juce::TextButton reloadProfilesButton { "Neu Laden" };
+
+    /// Button zum Speichern eines Profils
     juce::TextButton saveProfileButton { "Profil speichern" };
 
     /**
-     * @brief Aktualisiert die Profil-Liste im Dropdown-Menü.
+     * @brief Aktualisiert die Liste der Profile im Dropdown.
      */
     void reloadProfileList();
 
     // === Wellenformanzeige ===
+
+    /// Anzeige für die Wellenform
     WaveformDisplay waveformDisplay;
 
     /**
-     * @brief Timer-Callback zur regelmäßigen Aktualisierung (z. B. Waveform, Meter).
+     * @brief Timer-Callback zur regelmäßigen Aktualisierung der GUI.
      */
     void timerCallback() override;
 
     /**
-     * @brief Aktualisiert die grafische Darstellung der ADSR-Hüllkurve.
+     * @brief Aktualisiert die visuelle Darstellung der ADSR-Kurve.
      */
     void updateADSRVisual();
 
-    // === ADSR-Regler ===
+    // === ADSR-Regler und Attachments ===
+
+    /// Regler für Attack, Decay, Sustain, Release
     juce::Slider adsrAttackSlider, adsrDecaySlider, adsrSustainSlider, adsrReleaseSlider;
+
+    /// Labels für ADSR
     juce::Label adsrAttackLabel, adsrDecayLabel, adsrSustainLabel, adsrReleaseLabel;
 
+    /// Attachments für ADSR
     std::unique_ptr<SliderAttachment> adsrAttackAttachment, adsrDecayAttachment;
     std::unique_ptr<SliderAttachment> adsrSustainAttachment, adsrReleaseAttachment;
 
-    // === LevelMeter ===
+    // === Pegelanzeige ===
+
+    /// Komponente zur Anzeige des Pegels
     LevelMeterComponent levelMeter;
 
     // === Audio-Dateiverwaltung ===
+
+    /// AudioFormatManager zum Laden/Speichern
     juce::AudioFormatManager formatManager;
 
     /**
      * @brief Gibt das Verzeichnis zurück, in dem Presets gespeichert werden.
-     * @return JUCE File-Objekt mit Pfad.
+     * @return JUCE File-Objekt mit dem Pfad zum Profilordner.
      */
     juce::File getProfileDirectory() const;
 
     /**
      * @brief Gibt eine Liste aller verfügbaren Preset-Dateien zurück.
-     * @return Vektor von JUCE File-Objekten.
+     * @return Vektor mit Preset-Dateien.
      */
     std::vector<juce::File> getAvailableProfiles() const;
 
     /**
      * @brief Speichert das aktuelle Profil unter einem gegebenen Namen.
-     * @param profileName Name des Profils.
+     * @param profileName Name des neuen Profils.
      */
     void saveProfileWithName(const juce::String& profileName);
 
     /**
-     * @brief Lädt ein Profil anhand des Namens.
+     * @brief Lädt ein Profil anhand des übergebenen Namens.
      * @param profileName Name des zu ladenden Profils.
      */
     void loadProfileFromName(const juce::String& profileName);

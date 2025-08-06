@@ -4,50 +4,57 @@
 
 #include "WaveformDisplay.hpp"
 
+WaveformDisplay::WaveformDisplay(bool isStandalone) : isStandalone(isStandalone) {
+
+}
+
+
 void WaveformDisplay::paint(juce::Graphics &g)
 {
-    g.fillAll(juce::Colours::black);
 
-    if (audioBuffer.getNumSamples() == 0)
-        return;
 
     const int width = getWidth();
     const int height = getHeight();
-    const int numSamples = audioBuffer.getNumSamples();
+    if (isStandalone) {
+        g.fillAll(juce::Colours::black);
+        if (audioBuffer.getNumSamples() == 0)
+            return;
+        const int numSamples = audioBuffer.getNumSamples();
 
-    auto* data = audioBuffer.getReadPointer(0); // Kanal 0
+        auto* data = audioBuffer.getReadPointer(0); // Kanal 0
 
-    const int samplesPerPixel = juce::jmax(1, numSamples / width);
+        const int samplesPerPixel = juce::jmax(1, numSamples / width);
 
-    // === Wellenform zeichnen ===
-    g.setColour(juce::Colours::white);
+        // === Wellenform zeichnen ===
+        g.setColour(juce::Colours::white);
 
-    for (int x = 0; x < width; ++x)
-    {
-        const int startSample = x * samplesPerPixel;
-        float minSample = 1.0f;
-        float maxSample = -1.0f;
-
-        for (int i = 0; i < samplesPerPixel; ++i)
+        for (int x = 0; x < width; ++x)
         {
-            const int sampleIndex = startSample + i;
-            if (sampleIndex < numSamples)
+            const int startSample = x * samplesPerPixel;
+            float minSample = 1.0f;
+            float maxSample = -1.0f;
+
+            for (int i = 0; i < samplesPerPixel; ++i)
             {
-                const float sample = data[sampleIndex];
-                if (sample < minSample) minSample = sample;
-                if (sample > maxSample) maxSample = sample;
+                const int sampleIndex = startSample + i;
+                if (sampleIndex < numSamples)
+                {
+                    const float sample = data[sampleIndex];
+                    if (sample < minSample) minSample = sample;
+                    if (sample > maxSample) maxSample = sample;
+                }
             }
+
+            const float y1 = juce::jmap(minSample, -1.0f, 1.0f, (float)height, 0.0f);
+            const float y2 = juce::jmap(maxSample, -1.0f, 1.0f, (float)height, 0.0f);
+            g.drawLine((float)x, y1, (float)x, y2);
         }
 
-        const float y1 = juce::jmap(minSample, -1.0f, 1.0f, (float)height, 0.0f);
-        const float y2 = juce::jmap(maxSample, -1.0f, 1.0f, (float)height, 0.0f);
-        g.drawLine((float)x, y1, (float)x, y2);
+        // === Playhead zeichnen ===
+        g.setColour(juce::Colours::red);
+        const float playheadX = (float)width * playheadPosition;
+        g.drawLine(playheadX, 0.0f, playheadX, (float)height, 2.0f);
     }
-
-    // === Playhead zeichnen ===
-    g.setColour(juce::Colours::red);
-    const float playheadX = (float)width * playheadPosition;
-    g.drawLine(playheadX, 0.0f, playheadX, (float)height, 2.0f);
 
     // === ADSR zeichnen ===
     g.setColour(juce::Colours::yellow.withAlpha(0.8f));
@@ -61,7 +68,7 @@ void WaveformDisplay::paint(juce::Graphics &g)
     float attackX = (attackMs / totalMs) * widthF;
     float decayX = (decayMs / totalMs) * widthF;
     float releaseX = (releaseMs / totalMs) * widthF;
-    float sustainY = bounds.getBottom() - (sustainLevel * bounds.getHeight());
+    float sustainY = bounds.getBottom() - (sustainLevel * heightF);
 
     adsrPath.startNewSubPath(bounds.getX(), bounds.getBottom());                   // Start
     adsrPath.lineTo(bounds.getX() + attackX, bounds.getY());                       // Attack
