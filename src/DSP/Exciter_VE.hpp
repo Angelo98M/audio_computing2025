@@ -53,7 +53,7 @@ public:
      *
      * @param shouldBypass Wenn true, wird der Effekt umgangen (Bypass).
      */
-    void setBypass(bool shouldBypass);
+    void setBypass(bool shouldBypass) {bypassed = shouldBypass;}
 
 private:
     /** @brief Verhältnis zwischen unbearbeitetem und bearbeitetem Signal. */

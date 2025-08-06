@@ -327,7 +327,18 @@ void VocalEnhancerEditor::resized()
         compReleaseSlider.setBounds(s4.withTrimmedTop(25));
 
         auto s5 = row.removeFromLeft(width);
-        compressorToggleButton.setBounds(s5.withTrimmedTop(25));
+
+        // Button-Größe definieren
+        const int buttonWidth = 100;
+        const int buttonHeight = 20;
+
+        // Zentriere innerhalb von s3
+        compressorToggleButton.setBounds(
+            s5.getCentreX() - buttonWidth / 5,
+            s5.getCentreY() - buttonHeight / 5,
+            buttonWidth,
+            buttonHeight
+        );
     }
 
     {
@@ -343,7 +354,18 @@ void VocalEnhancerEditor::resized()
         deEsserFreqSlider.setBounds(s2.withTrimmedTop(25));
 
         auto s3 = row.removeFromLeft(width);
-        deEsserToggleButton.setBounds(s3.withTrimmedTop(25));
+
+        // Button-Größe definieren
+        const int buttonWidth = 100;
+        const int buttonHeight = 20;
+
+        // Zentriere innerhalb von s3
+        deEsserToggleButton.setBounds(
+            s3.getCentreX() - buttonWidth / 3,
+            s3.getCentreY() - buttonHeight / 3,
+            buttonWidth,
+            buttonHeight
+        );
     }
 
     {
@@ -371,7 +393,18 @@ void VocalEnhancerEditor::resized()
         eqHighPassSlider.setBounds(s5.withTrimmedTop(25));
 
         auto s6 = row.removeFromLeft(width);
-        equalizerToggleButton.setBounds(s6.withHeight(20));
+
+        // Button-Größe definieren
+        const int buttonWidth = 100;
+        const int buttonHeight = 20;
+
+        // Zentriere innerhalb von s6
+        equalizerToggleButton.setBounds(
+            s6.getCentreX() - buttonWidth / 6,
+            s6.getCentreY() - buttonHeight / 6,
+            buttonWidth,
+            buttonHeight
+        );
     }
 
     {
@@ -387,7 +420,18 @@ void VocalEnhancerEditor::resized()
         exciterMixSlider.setBounds(s2.withTrimmedTop(25));
 
         auto s3 = row.removeFromLeft(width);
-        exciterToggleButton.setBounds(s3.withHeight(20));
+
+        // Button-Größe definieren
+        const int buttonWidth = 100;
+        const int buttonHeight = 20;
+
+        // Zentriere innerhalb von s3
+        exciterToggleButton.setBounds(
+            s3.getCentreX() - buttonWidth / 3,
+            s3.getCentreY() - buttonHeight / 3,
+            buttonWidth,
+            buttonHeight
+        );
     }
 
     adsrGroup.setBounds(20, 530, 400, 120);
@@ -422,7 +466,7 @@ void VocalEnhancerEditor::resized()
     profileComboBox.setBounds(20, 690, 200, 24);
     reloadProfilesButton.setBounds(230, 690, 30, 24);
     saveProfileButton.setBounds(270, 690, 120, 24);
-    levelMeter.setBounds(500, 530, 50, 150); // Rechts am Rand
+    levelMeter.setBounds(680, 530, 50, 150); // Rechts am Rand
 
 
 
