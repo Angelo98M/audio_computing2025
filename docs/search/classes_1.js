@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['vocalenhancereditor_0',['VocalEnhancerEditor',['../class_vocal_enhancer_editor.html',1,'']]],
-  ['vocalenhancerprocessor_1',['VocalEnhancerProcessor',['../class_vocal_enhancer_processor.html',1,'']]]
+  ['deesser_5fve_0',['DeEsser_VE',['../class_de_esser___v_e.html',1,'']]]
 ];

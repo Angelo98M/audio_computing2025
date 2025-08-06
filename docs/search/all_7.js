@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['releaseresources_0',['releaseResources',['../class_vocal_enhancer_processor.html#a39cbdc514e2d2233a8465af5ae0a27a2',1,'VocalEnhancerProcessor']]],
-  ['resized_1',['resized',['../class_vocal_enhancer_editor.html#a7dd7fbf97239afbf35a61a6ed61d90ce',1,'VocalEnhancerEditor::resized()'],['../class_waveform_display.html#a9c0fa891baf415de141fd8f3069e9084',1,'WaveformDisplay::resized()']]]
+  ['levelmetercomponent_0',['LevelMeterComponent',['../class_level_meter_component.html',1,'LevelMeterComponent'],['../class_level_meter_component.html#ab6c1f4c56064bfa7e285ccc18e10784f',1,'LevelMeterComponent::LevelMeterComponent()']]],
+  ['levelmetercomponent_2ehpp_1',['LevelMeterComponent.hpp',['../_level_meter_component_8hpp.html',1,'']]],
+  ['loadfile_2',['loadFile',['../class_vocal_enhancer_processor.html#a56441e05129f211e913e6999e983b52d',1,'VocalEnhancerProcessor']]],
+  ['loadparametersformxml_3',['loadParametersformXML',['../class_vocal_enhancer_processor.html#ac6d28ed65dc721a620c060d7b693ade6',1,'VocalEnhancerProcessor']]]
 ];

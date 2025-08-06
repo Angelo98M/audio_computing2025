@@ -1,5 +1,23 @@
 var searchData=
 [
-  ['vocalenhancereditor_0',['VocalEnhancerEditor',['../class_vocal_enhancer_editor.html',1,'VocalEnhancerEditor'],['../class_vocal_enhancer_editor.html#a5a4e98c7382674bafe56bec44bb7e1d4',1,'VocalEnhancerEditor::VocalEnhancerEditor()']]],
-  ['vocalenhancerprocessor_1',['VocalEnhancerProcessor',['../class_vocal_enhancer_processor.html',1,'VocalEnhancerProcessor'],['../class_vocal_enhancer_processor.html#ad6b6476212cebc989d412ea69f58c8f7',1,'VocalEnhancerProcessor::VocalEnhancerProcessor()']]]
+  ['setadsr_0',['setADSR',['../class_waveform_display.html#ac8a449f1789ee7807a9416c041eac7cd',1,'WaveformDisplay']]],
+  ['setattack_1',['setAttack',['../class_compressor___v_e.html#abc2db200931bfc9ef5c165ad6e8975f9',1,'Compressor_VE::setAttack()'],['../class_de_esser___v_e.html#a9fdf7200e6b912b6447d7275d7b23fd1',1,'DeEsser_VE::setAttack()']]],
+  ['setaudiobuffer_2',['setAudioBuffer',['../class_waveform_display.html#a30e49ed34fc8b7bac4c5f6604f2463ca',1,'WaveformDisplay']]],
+  ['setbypass_3',['setBypass',['../class_equalizer___v_e.html#a11f8d496d1ab47c3c2edd60a8ddc5c7e',1,'Equalizer_VE::setBypass()'],['../class_exciter___v_e.html#a5d10c343ad27da9810fc9978764f72b5',1,'Exciter_VE::setBypass()']]],
+  ['setbypassed_4',['setBypassed',['../class_compressor___v_e.html#ab2194368938d936c5055826e7cb7a6fe',1,'Compressor_VE::setBypassed()'],['../class_de_esser___v_e.html#afaa2e7f62903a9f8b0d93e56bad526a6',1,'DeEsser_VE::setBypassed()']]],
+  ['setcompressorbypass_5',['setCompressorBypass',['../class_vocal_enhancer_processor.html#ae5a32936e9c0d39bb57262b32ea8c0d5',1,'VocalEnhancerProcessor']]],
+  ['setcurrentprogram_6',['setCurrentProgram',['../class_vocal_enhancer_processor.html#a34afda95f5cb44b45922ff6ae222cbd3',1,'VocalEnhancerProcessor']]],
+  ['setdesserbypass_7',['setDesserBypass',['../class_vocal_enhancer_processor.html#a277b4dcf891937ae4d27adaa9a3ce3a3',1,'VocalEnhancerProcessor']]],
+  ['setequalizerbypass_8',['setEqualizerBypass',['../class_vocal_enhancer_processor.html#aace9ac3d1d3a6bdefd48abec52f3bee5',1,'VocalEnhancerProcessor']]],
+  ['setexciterbypass_9',['setExciterBypass',['../class_vocal_enhancer_processor.html#ad7253a165a72cc5cedcb2bca5176f567',1,'VocalEnhancerProcessor']]],
+  ['setfrequency_10',['setFrequency',['../class_de_esser___v_e.html#af409099071aba0a6188a00308bdf617e',1,'DeEsser_VE']]],
+  ['setintensity_11',['setIntensity',['../class_exciter___v_e.html#a682bd0fcf839776d7c2153ebae7e1533',1,'Exciter_VE']]],
+  ['setmix_12',['setMix',['../class_exciter___v_e.html#a64fcffd0cf3a2574ae5934d683256252',1,'Exciter_VE']]],
+  ['setplayheadposition_13',['setPlayheadPosition',['../class_waveform_display.html#a02f52762284d3a37c4238ab45102a51f',1,'WaveformDisplay']]],
+  ['setratio_14',['setRatio',['../class_compressor___v_e.html#a9797449a6b0c87a41ff2e52752e3beda',1,'Compressor_VE']]],
+  ['setrelease_15',['setRelease',['../class_compressor___v_e.html#a5a1018c6c178e03134ae5cd8524d6a9b',1,'Compressor_VE::setRelease()'],['../class_de_esser___v_e.html#a6f5d8f3dd0c8eb496c76c10512dd27af',1,'DeEsser_VE::setRelease()']]],
+  ['setstateinformation_16',['setStateInformation',['../class_vocal_enhancer_processor.html#adb5e26bb88f13562717f0829057a9083',1,'VocalEnhancerProcessor']]],
+  ['setthreshold_17',['setThreshold',['../class_compressor___v_e.html#a1832347644ac23b32c5b08ce0f2a023c',1,'Compressor_VE::setThreshold()'],['../class_de_esser___v_e.html#a6c97f346191ec8ec70fc8b53c66bb156',1,'DeEsser_VE::setThreshold()']]],
+  ['startplayback_18',['startPlayback',['../class_vocal_enhancer_processor.html#ac130fa04225d144974278e5cd877014e',1,'VocalEnhancerProcessor']]],
+  ['stopplayback_19',['stopPlayback',['../class_vocal_enhancer_processor.html#ade4c866d14a92c3022d91657538220db',1,'VocalEnhancerProcessor']]]
 ];

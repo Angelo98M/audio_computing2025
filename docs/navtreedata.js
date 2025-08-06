@@ -24,7 +24,7 @@
 */
 var NAVTREE =
 [
-  [ "SimplyBetterVoice", "index.html", [
+  [ "Simply Better Voice", "index.html", [
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
       [ "Class Index", "classes.html", null ],
@@ -36,14 +36,18 @@ var NAVTREE =
       ] ]
     ] ],
     [ "Files", "files.html", [
-      [ "File List", "files.html", "files_dup" ]
+      [ "File List", "files.html", "files_dup" ],
+      [ "File Members", "globals.html", [
+        [ "All", "globals.html", null ],
+        [ "Functions", "globals_func.html", null ]
+      ] ]
     ] ]
   ] ]
 ];
 
 var NAVTREEINDEX =
 [
-"_level_meter_component_8hpp_source.html"
+"_compressor___v_e_8cpp.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

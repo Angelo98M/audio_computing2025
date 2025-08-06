@@ -1,13 +1,9 @@
 var searchData=
 [
-  ['setadsr_0',['setADSR',['../class_waveform_display.html#ac8a449f1789ee7807a9416c041eac7cd',1,'WaveformDisplay']]],
-  ['setaudiobuffer_1',['setAudioBuffer',['../class_waveform_display.html#a30e49ed34fc8b7bac4c5f6604f2463ca',1,'WaveformDisplay']]],
-  ['setcompressorbypass_2',['setCompressorBypass',['../class_vocal_enhancer_processor.html#ae5a32936e9c0d39bb57262b32ea8c0d5',1,'VocalEnhancerProcessor']]],
-  ['setdesserbypass_3',['setDesserBypass',['../class_vocal_enhancer_processor.html#a277b4dcf891937ae4d27adaa9a3ce3a3',1,'VocalEnhancerProcessor']]],
-  ['setequalizerbypass_4',['setEqualizerBypass',['../class_vocal_enhancer_processor.html#aace9ac3d1d3a6bdefd48abec52f3bee5',1,'VocalEnhancerProcessor']]],
-  ['setexciterbypass_5',['setExciterBypass',['../class_vocal_enhancer_processor.html#ad7253a165a72cc5cedcb2bca5176f567',1,'VocalEnhancerProcessor']]],
-  ['setplayheadposition_6',['setPlayheadPosition',['../class_waveform_display.html#a02f52762284d3a37c4238ab45102a51f',1,'WaveformDisplay']]],
-  ['setstateinformation_7',['setStateInformation',['../class_vocal_enhancer_processor.html#adb5e26bb88f13562717f0829057a9083',1,'VocalEnhancerProcessor']]],
-  ['startplayback_8',['startPlayback',['../class_vocal_enhancer_processor.html#ac130fa04225d144974278e5cd877014e',1,'VocalEnhancerProcessor']]],
-  ['stopplayback_9',['stopPlayback',['../class_vocal_enhancer_processor.html#ade4c866d14a92c3022d91657538220db',1,'VocalEnhancerProcessor']]]
+  ['paint_0',['paint',['../class_level_meter_component.html#adaef530ecea8375c3f8a4745cb5ba652',1,'LevelMeterComponent::paint()'],['../class_vocal_enhancer_editor.html#a0e33224124bc01ebe2c2b5dc9f820799',1,'VocalEnhancerEditor::paint()'],['../class_waveform_display.html#a31e536983841f73fbfcfcb36626015d3',1,'WaveformDisplay::paint()']]],
+  ['prepare_1',['prepare',['../class_compressor___v_e.html#a91bf2ce76a6d5627be89e1428675617a',1,'Compressor_VE::prepare()'],['../class_de_esser___v_e.html#a9441e8383a90ff257569ee42880dc507',1,'DeEsser_VE::prepare()'],['../class_equalizer___v_e.html#a55814cbec1645886e17b9160d56e1c05',1,'Equalizer_VE::prepare()'],['../class_exciter___v_e.html#abedea117a3b17f176f85af864d6ed260',1,'Exciter_VE::prepare()']]],
+  ['preparetoplay_2',['prepareToPlay',['../class_vocal_enhancer_processor.html#ab5627ce58d6cb56aebe8d2256fade7fe',1,'VocalEnhancerProcessor']]],
+  ['preparewritebuffer_3',['prepareWriteBuffer',['../class_vocal_enhancer_processor.html#abaf9e5ef7c4583b588c8365757f53100',1,'VocalEnhancerProcessor']]],
+  ['processblock_4',['processBlock',['../class_compressor___v_e.html#aaabc02aed80f937ed88ace2a34161714',1,'Compressor_VE::processBlock()'],['../class_de_esser___v_e.html#ad817ecef87bc28ac2c1273f48a02fea3',1,'DeEsser_VE::processBlock()'],['../class_equalizer___v_e.html#a1e3c0c83592bdc5d27400259477c1d7b',1,'Equalizer_VE::processBlock()'],['../class_exciter___v_e.html#a52d9114123bee7ab1442b11555a9c4e5',1,'Exciter_VE::processBlock()'],['../class_vocal_enhancer_processor.html#a03c17b6139595ce0c7d769030ab3b5ca',1,'VocalEnhancerProcessor::processBlock(juce::AudioBuffer&lt; float &gt; &amp;buffer, juce::MidiBuffer &amp;midiMessages) override']]],
+  ['producesmidi_5',['producesMidi',['../class_vocal_enhancer_processor.html#a58360180e9d52fb17dfa7c93c826222f',1,'VocalEnhancerProcessor']]]
 ];
